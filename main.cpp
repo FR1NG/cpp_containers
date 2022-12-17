@@ -1,17 +1,19 @@
-#include "vector.hpp"
+#include "vector/vector.hpp"
+
+
 
 int main()
 {
-    Vector<int> v;
+    vector<std::string> x;
 
-    Vector<int> j;
+    for (int i = 0; i< 10; i++)
+        x.push_back("hello world");
 
-    v.push_back(10);
-//    v.push_back(11);
-//    j.push_back(5);
+//    x.clear();
+//
+//    x.test();
 
-    j.push_back(10);
-//    j.push_back(11);
-
-    std::cout << (v > j) << std::endl;
+    vector<std::string>::iterator it;
+    it = begin;
+    std::cout << *x.begin() << std::endl;
 }

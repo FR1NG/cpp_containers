@@ -1,4 +1,4 @@
-SRC = vector.cpp main.cpp
+SRC =  main.cpp
 NAME = progmar
 OBJ=$(SRC:.cpp=.o)
 COMPILER=c++
