@@ -95,9 +95,42 @@ public:
         }
         return true;
     }
+
     bool operator!=(const Vector &vec)
     {
         return !(*this == vec);
+    }
+
+    bool    operator>(const Vector& vec)
+    {
+        size_type i;
+
+        i = 0;
+        while(i < this->_size && i < vec._size)
+        {
+            if (this->_v[i] > vec._v[i])
+                return true;
+            i++;
+        }
+        if(this->_size > vec._size)
+            return true;
+        return false;
+    }
+
+    bool    operator>=(const Vector& vec)
+    {
+        size_type i;
+
+        i = 0;
+        while(i < this->_size && i < vec._size)
+        {
+            if (this->_v[i] > vec._v[i])
+                return true;
+            i++;
+        }
+        if(this->_size < vec._size)
+            return false;
+        return true;
     }
 // operators [ end ]
     static void dup(value_type *dest, value_type *src, size_type size)

@@ -2,14 +2,16 @@
 
 int main()
 {
-    Vector<std::string> v;
+    Vector<int> v;
 
-    v.push_back("hello world");
+    Vector<int> j;
 
-    Vector<std::string> j;
+    v.push_back(10);
+//    v.push_back(11);
+//    j.push_back(5);
 
-    j.push_back("hello world");
-//    j.push_back("not equal");
+    j.push_back(10);
+//    j.push_back(11);
 
-    std::cout << (v != j) << std::endl;
+    std::cout << (v > j) << std::endl;
 }
