@@ -11,7 +11,9 @@
 
 template<class T,class Allocator = std::allocator<T> >
 class vector {
-private:
+
+public:
+    typedef vector_iterator<T> iterator;
     typedef T value_type;
     typedef Allocator allocator_type;
     typedef   std::size_t size_type;
@@ -20,16 +22,9 @@ private:
     typedef const value_type& const_reference;
 //    typedef pointer
 //    typedef const_pointer
-    typedef vector_iterator<T> iterator;
 //    typedef const_iterator
 //    typedef reverse_iterator
 //    typedef const_reverse_iterator
-    allocator_type _allocator;
-    value_type * _v;
-    size_type _size;
-    size_type _capacity;
-
-public:
     iterator _iterator;
     vector(): _size(0), _capacity(0), _v(nullptr)
     {};
@@ -67,6 +62,7 @@ public:
 
     vector& operator=(const vector& vec)
     {
+//        don't forget to destroy the old object
         if(&vec == this)
             return (*this);
         this->_size = vec._size;
@@ -206,6 +202,9 @@ public:
 iterator    begin() {
         return this->_iterator;
     }
+iterator end() {
+    return this->_iterator + this->_size;
+}
 // iterators [ end ]
 
 
@@ -220,6 +219,12 @@ iterator    begin() {
 ~vector() {
         _allocator.destroy(_v);
     }
+
+private:
+    allocator_type _allocator;
+    value_type * _v;
+    size_type _size;
+    size_type _capacity;
 };
 
 

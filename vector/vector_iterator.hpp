@@ -4,6 +4,7 @@
 
 #ifndef FT_CONTAINERS_VECTOR_ITERATOR_HPP
 #define FT_CONTAINERS_VECTOR_ITERATOR_HPP
+#include "vector.hpp"
 
 template <class T>
 class vector_iterator {
@@ -30,9 +31,24 @@ public:
 
 //    overloading operators
 
+
+    bool    operator==(const vector_iterator<T>& it)
+    {
+        if (this->ptr == it.ptr)
+            return true;
+        return false;
+    }
+
+    bool    operator!=(const vector_iterator<T>& it)
+    {
+        if(*this == it)
+            return false;
+        return true;
+    }
+
     vector_iterator& operator=(const vector_iterator<T>& it) {
         if (this == &it)
-            return this;
+            return *this;
         this->ptr = it.ptr;
         return *this;
     }
@@ -44,7 +60,7 @@ public:
 
     vector_iterator operator++(int) {
         vector_iterator tmp = *this;
-        ++*this;
+        ++(*this);
         return tmp;
     }
 
@@ -62,6 +78,13 @@ public:
 
     reference operator*() const {
         return *(this->ptr);
+    }
+
+    vector_iterator operator+(size_t i)
+    {
+        vector_iterator iterator = *this;
+        iterator.ptr += i;
+        return iterator;
     }
 };
 
