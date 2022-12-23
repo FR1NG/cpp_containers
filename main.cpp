@@ -1,22 +1,33 @@
 #include "vector/vector.hpp"
 
 
+int main() {
 
-int main()
-{
-    vector<std::string> x;
+    std::cout << "hello from progmar" << std::endl;
 
-    for (int i = 0; i< 10; i++)
-        x.push_back("hello world "+ std::to_string(i));
+    ft::vector<int> x;
 
-//    x.clear();
-//
-//    x.test();
+    x.push_back(10);
+    x.push_back(15);
 
-//    vector<std::string>::iterator it;
-//    it = x.begin();
-    for(vector<std::string>::iterator it = x.begin();it != x.end() ; it++)
-    {
-        std::cout << *it << std::endl;
-    }
+//    try {
+//        ft::vector<int>::const_reference ref = x.at(0);
+//        std::cout  << " well this is the const ref " << ref << std::endl;
+//        std::cout << x.at(1) << std::endl;
+//        std::cout << x.at(0) << std::endl;
+//        std::cout << x.at(-1) << std::endl;
+//    } catch (std::exception &e)
+//    {
+//        std::cout << e.what() << std::endl;
+//    }
+
+    std::cout << x[1] << std::endl;
+    std::cout << x[0] << std::endl;
+
+    ft::vector<int>::const_reference ref = x[0];
+
+    std::cout << ref << std::endl;
+    std::cout << x.front() << std::endl;
+    std::cout << x.back() << std::endl;
+
 }
