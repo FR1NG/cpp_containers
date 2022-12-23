@@ -21,13 +21,16 @@ int main() {
 //        std::cout << e.what() << std::endl;
 //    }
 
-    std::cout << x[1] << std::endl;
-    std::cout << x[0] << std::endl;
+//    std::cout << x[1] << std::endl;
+//    std::cout << x[0] << std::endl;
+//
+//    ft::vector<int>::const_reference ref = x[0];
+//
+//    std::cout << ref << std::endl;
+//    std::cout << x.front() << std::endl;
+//    std::cout << x.back() << std::endl;
 
-    ft::vector<int>::const_reference ref = x[0];
+    int *ptr = x.data();
 
-    std::cout << ref << std::endl;
-    std::cout << x.front() << std::endl;
-    std::cout << x.back() << std::endl;
-
+    std::cout << ptr[1] << std::endl;
 }

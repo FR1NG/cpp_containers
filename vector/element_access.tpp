@@ -5,7 +5,6 @@
 #ifndef FT_CONTAINERS_ELEMENT_ACCESS_TPP
 #define FT_CONTAINERS_ELEMENT_ACCESS_TPP
 #include <exception>
-#include "vector.hpp"
 
 namespace ft {
 
@@ -54,6 +53,16 @@ namespace ft {
     }
 
 
+    template <typename T, typename Allocator>
+    T* vector<T, Allocator>::data () {
+        return this->_v;
+    }
+
+
+    template <typename T, typename Allocator>
+    const T* vector<T, Allocator>::data () const {
+        return this->_v;
+    }
 }
 
 #endif //FT_CONTAINERS_ELEMENT_ACCESS_TPP

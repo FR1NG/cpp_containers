@@ -236,6 +236,8 @@ namespace ft {
     const_reference front() const;
     reference back();
     const_reference back() const;
+    T* data();
+    const T* data() const;
 
     private:
         allocator_type _allocator;
