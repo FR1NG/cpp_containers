@@ -159,6 +159,7 @@ namespace ft {
             _capacity = newCapacity;
             copy(tmp);
             _allocator.destroy(_v);
+            _allocator.deallocate(_v, this->_capacity);
             _v = tmp;
             this->_iterator.setPointer(_v);
         }
@@ -239,6 +240,14 @@ namespace ft {
     T* data();
     const T* data() const;
 
+/*
+        =================================================
+        ================[ element access ]===============
+        =================================================
+*/
+
+    iterator insert( const_iterator pos, const T& value );
+
     private:
         allocator_type _allocator;
         value_type *_v;
@@ -248,5 +257,6 @@ namespace ft {
 };
 
 #include "element_access.tpp"
+#include "modifiers.tpp"
 
 #endif //FT_CONTAINERS_VECTOR_HPP

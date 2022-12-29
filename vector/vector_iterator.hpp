@@ -34,9 +34,27 @@ public:
 
     bool    operator==(const vector_iterator<T>& it)
     {
-        if (this->ptr == it.ptr)
-            return true;
-        return false;
+        return (this->ptr == it.ptr);
+    }
+
+    bool    operator>=(const vector_iterator<T>& it)
+    {
+        return (this->ptr >= it.ptr);
+    }
+
+    bool    operator<=(const vector_iterator<T>& it)
+    {
+        return (this->ptr <= it.ptr);
+    }
+
+    bool    operator>(const vector_iterator<T>& it)
+    {
+        return (this->ptr > it.ptr);
+    }
+
+    bool    operator<(const vector_iterator<T>& it)
+    {
+        return (this->ptr < it.ptr);
     }
 
     bool    operator!=(const vector_iterator<T>& it)
@@ -85,6 +103,12 @@ public:
         vector_iterator iterator = *this;
         iterator.ptr += i;
         return iterator;
+    }
+
+//    to be looked at lather
+    reference operator[](size_t i)
+    {
+        return  (*this + i);
     }
 };
 

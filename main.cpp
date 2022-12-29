@@ -1,14 +1,15 @@
 #include "vector/vector.hpp"
 
+#include <vector>
 
 int main() {
 
-    std::cout << "hello from progmar" << std::endl;
-
-    ft::vector<int> x;
-
-    x.push_back(10);
-    x.push_back(15);
+//    std::cout << "hello from progmar" << std::endl;
+//
+//    ft::vector<int> x;
+//
+//    x.push_back(10);
+//    x.push_back(15);
 
 //    try {
 //        ft::vector<int>::const_reference ref = x.at(0);
@@ -30,7 +31,38 @@ int main() {
 //    std::cout << x.front() << std::endl;
 //    std::cout << x.back() << std::endl;
 
-    int *ptr = x.data();
+//   x.insert(x.begin(), 10);
 
-    std::cout << ptr[1] << std::endl;
+    {
+        ft::vector<int> x;
+
+        for (int i = 0; i < 3; i++)
+            x.push_back((i + 1) * 10);
+
+        ft::vector<int>::iterator it = x.begin();
+        it++;
+        x.insert(x.end(), 15);
+        for (int i = 0; i < x.size(); ++i)
+            std::cout << x[i] << std::endl;
+
+        std::cout << "size : " << x.size() << std::endl;
+        std::cout << "capacity : " << x.capacity() << std::endl;
+    }
+std::cout << "=============================" << std::endl;
+    {
+         std::vector<int> x;
+
+        for (int i = 0; i < 3; i++)
+            x.push_back((i + 1) * 10);
+
+        std::vector<int>::iterator it = x.begin();
+        it++;
+        x.insert(x.end(), 15);
+        for (int i = 0; i < x.size(); ++i)
+            std::cout << x[i] << std::endl;
+
+        std::cout << "size : " << x.size() << std::endl;
+        std::cout << "capacity : " << x.capacity() << std::endl;
+    }
+
 }
