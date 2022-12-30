@@ -31,6 +31,39 @@ namespace ft {
             this->push_back(value);
         return it;
     }
+
+    template<typename T, typename Allocator>
+    typename vector<T, Allocator>::iterator vector<T, Allocator>::insert( vector<T, Allocator>::const_iterator pos, vector<T, Allocator>::size_type count, const T& value )
+    {
+        if(count < this->_capacity - this->_size)
+        {
+            vector<T, Allocator>::iterator new_end = this->end() + count - 1;
+            vector<T, Allocator>::iterator end = this->end() - 1;
+            vector<T, Allocator>::iterator new_pos = pos + count;
+
+            while(new_end >= this->begin())
+            {
+                if (new_pos == new_end)
+                {
+                    *new_end = *end;
+                    end--;
+                    new_end--;
+                    for(vector<T, Allocator>::size_type i = 0; i < count; i++)
+                    {
+                        *new_end = value;
+                        new_end--;
+                    }
+                    break;
+                }
+                *new_end = *end;
+                end--;
+                new_end--;
+            }
+            this->_size += count;
+            return new_end;
+        }
+        return pos;
+    }
 }
 
 

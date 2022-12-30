@@ -242,11 +242,12 @@ namespace ft {
 
 /*
         =================================================
-        ================[ element access ]===============
+        ===================[ modifiers ]=================
         =================================================
 */
 
     iterator insert( const_iterator pos, const T& value );
+    iterator insert( const_iterator pos, size_type count, const T& value );
 
     private:
         allocator_type _allocator;

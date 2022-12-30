@@ -98,10 +98,17 @@ public:
         return *(this->ptr);
     }
 
-    vector_iterator operator+(size_t i)
+    vector_iterator operator+(size_t i) const
     {
         vector_iterator iterator = *this;
         iterator.ptr += i;
+        return iterator;
+    }
+
+    vector_iterator operator-(size_t i) const
+    {
+        vector_iterator iterator = *this;
+        iterator.ptr -= i;
         return iterator;
     }
 
