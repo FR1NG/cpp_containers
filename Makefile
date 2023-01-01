@@ -7,15 +7,20 @@ FLAGS=-Wall -Wextra -Werror -std=c++98
 all: $(NAME)
 
 $(NAME) : $(OBJ)
-	$(COMPILER) $(FLAGS) $^ -o $@
+	@$(COMPILER) $(FLAGS) $^ -o $@
 
 %.o:%.cpp %.hpp
-	$(COMPILER) $(FLAGS) -c $< -o $@
+	@$(COMPILER) $(FLAGS) -c $< -o $@
+
+test: re
+	@clear
+	@./progmar
+
 
 clean:
-	rm -rf $(OBJ)
+	@rm -rf $(OBJ)
 
 fclean: clean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
 
 re: fclean all

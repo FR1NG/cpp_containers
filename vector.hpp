@@ -4,12 +4,23 @@
 
 #ifndef FT_CONTAINERS_VECTOR_HPP
 #define FT_CONTAINERS_VECTOR_HPP
+
 #include <iostream>
 #include <memory>
 #include <exception>
+#include "vector/helpers.tpp"
+#include "vector/vector_iterator.hpp"
 
-#include "vector_iterator.hpp"
 namespace ft {
+
+//    hello world
+    template<typename IT>
+    int distance(const IT &begin, const IT &end) {
+        if (end > begin)
+            return end - begin;
+        return -1;
+    }
+
     template<typename T, typename Allocator = std::allocator <T> >
     class vector {
 
@@ -21,14 +32,50 @@ namespace ft {
         typedef std::ptrdiff_t difference_type;
         typedef value_type &reference;
         typedef const value_type &const_reference;
-//    typedef pointer
-//    typedef const_pointer
-    typedef const vector_iterator<T> const_iterator;
-//    typedef reverse_iterator
-//    typedef const_reverse_iterator
+        //    typedef pointer
+        //    typedef const_pointer
+        typedef const vector_iterator<T> const_iterator;
+        //    typedef reverse_iterator
+        //    typedef const_reverse_iterator
         iterator _iterator;
 
+        //        constructors [ begin ]
         vector() : _size(0), _capacity(0), _v(nullptr) {};
+
+        explicit vector(const Allocator &alloc) : _allocator(alloc) {}
+
+        explicit vector(
+                size_type count,
+                const T &value = T(),
+                const Allocator &alloc = Allocator(),
+                typename ft::enable_if<true, int>::type x = 1
+        ) : _allocator(alloc) {
+            std::cout << "integral constructor" << std::endl;
+            this->reserve(count);
+            for (size_type i = 0; i < count; i++)
+                this->_v[i] = value;
+            this->_size = count;
+        }
+
+        template<class InputIt>
+        vector(InputIt first, InputIt last, const Allocator &alloc = Allocator()): _size(0), _capacity(0), _v(nullptr) {
+            std::cout << "non integral constructor" << std::endl;
+            std::cout << ft::is_integral<T>::value << std::endl;
+//            InputIt it = first;
+//            while ( it != last )
+//            {
+//                this->push_back(*it);
+//                it++;
+//            }
+        }
+
+        vector(const vector &x) {
+            this->_size = x._size;
+            this->_capacity = x._capacity;
+            this->_v = this->_allocator.allocate(this->_capacity);
+            vector::dup(this->_v, x._v, this->_size);
+        }
+        //        constructors [ end ]
 
         void push_back(const T &val) {
             if (_size < _capacity) {
@@ -156,10 +203,11 @@ namespace ft {
 
         void reserve(int newCapacity) {
             T *tmp = _allocator.allocate(newCapacity);
+            if (this->capacity() != 0) {
+                copy(tmp);
+                _allocator.deallocate(_v, this->_capacity);
+            }
             _capacity = newCapacity;
-            copy(tmp);
-            _allocator.destroy(_v);
-            _allocator.deallocate(_v, this->_capacity);
             _v = tmp;
             this->_iterator.setPointer(_v);
         }
@@ -177,8 +225,8 @@ namespace ft {
 
 // modifiers [ start ]
         void clear() {
-            this->_allocator.destroy(this->_v);
-            this->_size = 0;
+            _allocator.destroy(_v);
+            _allocator.deallocate(_v, this->_capacity);
         }
 // modifiers [ end ]
 
@@ -220,7 +268,7 @@ namespace ft {
 
 //    destructor of the class
         ~vector() {
-            _allocator.destroy(_v);
+            _allocator.deallocate(_v, this->capacity());
         }
 
 /*
@@ -229,16 +277,25 @@ namespace ft {
         =================================================
 */
 
-    reference at( size_type pos );
-    const_reference at( size_type pos ) const;
-    reference operator[]( size_type pos );
-    const_reference operator[]( size_type pos ) const;
-    reference front();
-    const_reference front() const;
-    reference back();
-    const_reference back() const;
-    T* data();
-    const T* data() const;
+        reference at(size_type pos);
+
+        const_reference at(size_type pos) const;
+
+        reference operator[](size_type pos);
+
+        const_reference operator[](size_type pos) const;
+
+        reference front();
+
+        const_reference front() const;
+
+        reference back();
+
+        const_reference back() const;
+
+        T *data();
+
+        const T *data() const;
 
 /*
         =================================================
@@ -246,8 +303,9 @@ namespace ft {
         =================================================
 */
 
-    iterator insert( const_iterator pos, const T& value );
-    iterator insert( const_iterator pos, size_type count, const T& value );
+        iterator insert(const_iterator pos, const T &value);
+
+        iterator insert(const_iterator pos, size_type count, const T &value);
 
     private:
         allocator_type _allocator;
@@ -257,7 +315,7 @@ namespace ft {
     };
 };
 
-#include "element_access.tpp"
-#include "modifiers.tpp"
+#include "vector/element_access.tpp"
+#include "vector/modifiers.tpp"
 
 #endif //FT_CONTAINERS_VECTOR_HPP

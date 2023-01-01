@@ -4,7 +4,7 @@
 
 #ifndef FT_CONTAINERS_VECTOR_ITERATOR_HPP
 #define FT_CONTAINERS_VECTOR_ITERATOR_HPP
-#include "vector.hpp"
+#include "../vector.hpp"
 
 template <class T>
 class vector_iterator {
@@ -32,32 +32,32 @@ public:
 //    overloading operators
 
 
-    bool    operator==(const vector_iterator<T>& it)
+    bool    operator==(const vector_iterator<T>& it) const
     {
         return (this->ptr == it.ptr);
     }
 
-    bool    operator>=(const vector_iterator<T>& it)
+    bool    operator>=(const vector_iterator<T>& it) const
     {
         return (this->ptr >= it.ptr);
     }
 
-    bool    operator<=(const vector_iterator<T>& it)
+    bool    operator<=(const vector_iterator<T>& it) const
     {
         return (this->ptr <= it.ptr);
     }
 
-    bool    operator>(const vector_iterator<T>& it)
+    bool    operator>(const vector_iterator<T>& it) const
     {
         return (this->ptr > it.ptr);
     }
 
-    bool    operator<(const vector_iterator<T>& it)
+    bool    operator<(const vector_iterator<T>& it) const
     {
         return (this->ptr < it.ptr);
     }
 
-    bool    operator!=(const vector_iterator<T>& it)
+    bool    operator!=(const vector_iterator<T>& it) const
     {
         if(*this == it)
             return false;
@@ -105,15 +105,20 @@ public:
         return iterator;
     }
 
-    vector_iterator operator-(size_t i) const
+    vector_iterator operator-(const size_t i) const
     {
         vector_iterator iterator = *this;
         iterator.ptr -= i;
         return iterator;
     }
 
+    int operator-(const vector_iterator<T> & it) const
+    {
+        return this->ptr - it.ptr;
+    }
+
 //    to be looked at lather
-    reference operator[](size_t i)
+    reference operator[](size_t i) const
     {
         return  (*this + i);
     }

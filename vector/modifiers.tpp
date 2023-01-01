@@ -37,30 +37,62 @@ namespace ft {
     {
         if(count < this->_capacity - this->_size)
         {
-            vector<T, Allocator>::iterator new_end = this->end() + count - 1;
-            vector<T, Allocator>::iterator end = this->end() - 1;
-            vector<T, Allocator>::iterator new_pos = pos + count;
-
-            while(new_end >= this->begin())
+        vector<T, Allocator>::iterator new_end = this->end() + count - 1;
+        vector<T, Allocator>::iterator end = this->end() - 1;
+        vector<T, Allocator>::iterator new_pos = pos + count;
+            if(pos >= this->end())
             {
-                if (new_pos == new_end)
+                end++;
+                for(vector<T, Allocator>::size_type i = 0; i < count; i++)
                 {
+                    *end = value;
+                    end++;
+                }
+            }
+            else
+            {
+                while (new_end >= this->begin()) {
+                    if (new_pos == new_end) {
+                        *new_end = *end;
+                        end--;
+                        new_end--;
+                        for (vector<T, Allocator>::size_type i = 0; i < count; i++) {
+                            *new_end = value;
+                            new_end--;
+                        }
+                        break;
+                    }
                     *new_end = *end;
                     end--;
                     new_end--;
-                    for(vector<T, Allocator>::size_type i = 0; i < count; i++)
-                    {
-                        *new_end = value;
-                        new_end--;
-                    }
-                    break;
                 }
-                *new_end = *end;
-                end--;
-                new_end--;
             }
             this->_size += count;
             return new_end;
+        }
+        else
+        {
+            T *tmp = this->_allocator.allocate(this->_size + count);
+            vector<T, Allocator>::iterator begin = this->begin();
+            vector<T, Allocator>::size_type counter = 0;
+            while(begin < this->end() + count)
+            {
+                if(begin == pos)
+                {
+                    for(vector<T, Allocator>::size_type i = counter; i < counter + count; i++)
+                        tmp[i] = value;
+                    counter+=count;
+                }
+                tmp[counter] = *begin;
+                begin++;
+                counter++;
+            }
+            this->_allocator.destroy(this->_v);
+            this->_allocator.deallocate(this->_v, this->_capacity);
+            this->_v = tmp;
+            this->_iterator.setPointer(tmp);
+            this->_size += count;
+            this->_capacity = this->size();
         }
         return pos;
     }
