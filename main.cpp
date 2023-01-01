@@ -16,7 +16,7 @@ template<typename T>
 void test()
 {
     ft::vector<int> x(10, 10);
-    print_vector(x, true);
+//    print_vector(x, true);
 
 //    ft::enable_if<false, std::string>::type x = "10";
 
