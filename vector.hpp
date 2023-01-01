@@ -44,12 +44,27 @@ namespace ft {
 
         explicit vector(const Allocator &alloc) : _allocator(alloc) {}
 
+
+        template<class InputIt>
+        vector(InputIt first,
+               InputIt last,
+               const Allocator &alloc = Allocator(),
+               typename enable_if<!is_integral<InputIt>::value, InputIt>::type = InputIt() ): _size(0), _capacity(0), _v(nullptr) {
+            std::cout << "non integral constructor" << std::endl;
+            std::cout << ft::is_integral<T>::value << std::endl;
+            InputIt it = first;
+            while ( it != last )
+            {
+                this->push_back(*it);
+                it++;
+            }
+        }
+
         explicit vector(
                 size_type count,
                 const T &value = T(),
-                const Allocator &alloc = Allocator(),
-                typename ft::enable_if<true, int>::type x = 1
-        ) : _allocator(alloc) {
+                const Allocator &alloc = Allocator()
+                        ) : _allocator(alloc) {
             std::cout << "integral constructor" << std::endl;
             this->reserve(count);
             for (size_type i = 0; i < count; i++)
@@ -57,17 +72,6 @@ namespace ft {
             this->_size = count;
         }
 
-        template<class InputIt>
-        vector(InputIt first, InputIt last, const Allocator &alloc = Allocator()): _size(0), _capacity(0), _v(nullptr) {
-            std::cout << "non integral constructor" << std::endl;
-            std::cout << ft::is_integral<T>::value << std::endl;
-//            InputIt it = first;
-//            while ( it != last )
-//            {
-//                this->push_back(*it);
-//                it++;
-//            }
-        }
 
         vector(const vector &x) {
             this->_size = x._size;

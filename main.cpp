@@ -15,7 +15,14 @@ void sep()
 template<typename T>
 void test()
 {
-    ft::vector<int> x(10, 10);
+    std::vector<int> y(10, 10);
+    ft::vector<int> x(y.begin(), y.end());
+    std::vector<int> z(y.begin(), y.end());
+
+    print_vector(y, true);
+    print_vector(x, true);
+    print_vector(z, true);
+
 //    print_vector(x, true);
 
 //    ft::enable_if<false, std::string>::type x = "10";
