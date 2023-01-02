@@ -7,6 +7,18 @@
 
 namespace ft
 {
+    template<typename T>
+    size_t distance(T& begin, T& end)
+    {
+        size_t counter;
+        counter = 0;
+
+        for(T it = begin; it != end; it++)
+            counter++;
+        return counter;
+    }
+
+
     struct true_type{static const bool value = true;};
     struct false_type{static const bool value = false;};
 

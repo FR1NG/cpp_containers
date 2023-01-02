@@ -40,44 +40,53 @@ namespace ft {
         iterator _iterator;
 
         //        constructors [ begin ]
-        vector() : _size(0), _capacity(0), _v(nullptr) {};
+        vector() : _size(0), _capacity(0), _v(nullptr) {
+            this->_iterator.setPointer(_v);
+        };
 
-        explicit vector(const Allocator &alloc) : _allocator(alloc) {}
+        explicit vector(const Allocator &alloc) : _allocator(alloc), _v(nullptr) {
+            this->_iterator.setPointer(_v);
+        }
 
 
         template<class InputIt>
         vector(InputIt first,
                InputIt last,
                const Allocator &alloc = Allocator(),
-               typename enable_if<!is_integral<InputIt>::value, InputIt>::type = InputIt() ): _size(0), _capacity(0), _v(nullptr) {
-            std::cout << "non integral constructor" << std::endl;
-            std::cout << ft::is_integral<T>::value << std::endl;
+               typename enable_if<!is_integral<InputIt>::value, InputIt>::type = InputIt()
+        ): _size(0), _capacity(0), _v(nullptr) {
+            size_type count = ft::distance(first, last);
+            this->_v = this->_allocator.allocate(count);
+            this->_size = this->_capacity = count;
             InputIt it = first;
-            while ( it != last )
-            {
-                this->push_back(*it);
+            size_type i(0);
+            while (it != last) {
+                this->_v[i] = *it;
+                i++;
                 it++;
             }
+            this->_iterator.setPointer(_v);
         }
 
         explicit vector(
                 size_type count,
                 const T &value = T(),
                 const Allocator &alloc = Allocator()
-                        ) : _allocator(alloc) {
-            std::cout << "integral constructor" << std::endl;
+        ) : _allocator(alloc) {
             this->reserve(count);
             for (size_type i = 0; i < count; i++)
                 this->_v[i] = value;
             this->_size = count;
+            this->_iterator.setPointer(this->_v);
         }
 
 
-        vector(const vector &x) {
+        vector(const vector &x): _capacity(0), _size(0) {
             this->_size = x._size;
             this->_capacity = x._capacity;
             this->_v = this->_allocator.allocate(this->_capacity);
-            vector::dup(this->_v, x._v, this->_size);
+            this->_iterator.setPointer(this->_v);
+            this->_dup(this->_v, x._v, this->_size);
         }
         //        constructors [ end ]
 
@@ -114,7 +123,7 @@ namespace ft {
             this->_size = vec._size;
             this->_capacity = vec._capacity;
             this->_v = this->_allocator.allocate(this->_capacity);
-            vector::dup(this->_v, vec._v, this->_size);
+            this->_dup(this->_v, vec._v, this->_size);
             return (*this);
         }
 
@@ -264,11 +273,6 @@ namespace ft {
 
 
 
-//others
-        static void dup(value_type *dest, value_type *src, size_type size) {
-            for (size_type i = 0; i < size; i++)
-                dest[i] = src[i];
-        }
 
 //    destructor of the class
         ~vector() {
@@ -316,6 +320,12 @@ namespace ft {
         value_type *_v;
         size_type _size;
         size_type _capacity;
+
+//others
+        void _dup(value_type *dest, value_type *src, size_type size) {
+            for (size_type i = 0; i < size; i++)
+                dest[i] = src[i];
+        }
     };
 };
 
