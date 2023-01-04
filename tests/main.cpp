@@ -1,10 +1,18 @@
 #include <iostream>
 
 #include "trait.hpp"
+#include "../dev/helper.h"
+#include <vector>
+#include <exception>
+
 
 int main()
 {
 
-    ft::enable_if<ft::is_integral<float>::value, float> x;
-    std::cout << "is integral value: "<<  x  << std::endl;
+    std::vector<int> x(10, 10);
+
+    print_vector(x, true);
+    x.clear();
+    print_vector(x, true);
+
 }

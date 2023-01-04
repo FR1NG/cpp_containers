@@ -13,7 +13,6 @@
 
 namespace ft {
 
-//    hello world
     template<typename IT>
     int distance(const IT &begin, const IT &end) {
         if (end > begin)
@@ -40,13 +39,9 @@ namespace ft {
         iterator _iterator;
 
         //        constructors [ begin ]
-        vector() : _size(0), _capacity(0), _v(nullptr) {
-            this->_iterator.setPointer(_v);
-        };
+        vector() : _size(0), _capacity(0), _v(nullptr) {};
 
-        explicit vector(const Allocator &alloc) : _allocator(alloc), _v(nullptr) {
-            this->_iterator.setPointer(_v);
-        }
+        explicit vector(const Allocator &alloc) : _allocator(alloc), _v(nullptr) {}
 
 
         template<class InputIt>
@@ -59,9 +54,9 @@ namespace ft {
             this->_v = this->_allocator.allocate(count);
             this->_size = this->_capacity = count;
             InputIt it = first;
-            size_type i(0);
+            size_type i = 0;
             while (it != last) {
-                this->_v[i] = *it;
+                this->_allocator.construct(this->_v + i, *it);
                 i++;
                 it++;
             }
@@ -75,7 +70,7 @@ namespace ft {
         ) : _allocator(alloc) {
             this->reserve(count);
             for (size_type i = 0; i < count; i++)
-                this->_v[i] = value;
+                this->_allocator.construct(this->_v + i, value);
             this->_size = count;
             this->_iterator.setPointer(this->_v);
         }
@@ -86,7 +81,8 @@ namespace ft {
             this->_capacity = x._capacity;
             this->_v = this->_allocator.allocate(this->_capacity);
             this->_iterator.setPointer(this->_v);
-            this->_dup(this->_v, x._v, this->_size);
+//            this->_dup(this->_v, x._v, this->_size);
+            this->_reconstruct(this->_v, x._v, this->_size);
         }
         //        constructors [ end ]
 
@@ -216,9 +212,9 @@ namespace ft {
 
         void reserve(int newCapacity) {
             T *tmp = _allocator.allocate(newCapacity);
-            if (this->capacity() != 0) {
-                copy(tmp);
-                _allocator.deallocate(_v, this->_capacity);
+            if (this->size() != 0) {
+                this->_reconstruct(tmp, this->_v, this->_size);
+                this->_destroy();
             }
             _capacity = newCapacity;
             _v = tmp;
@@ -238,8 +234,41 @@ namespace ft {
 
 // modifiers [ start ]
         void clear() {
-            _allocator.destroy(_v);
-            _allocator.deallocate(_v, this->_capacity);
+            for(size_type i = 0; i < this->size(); i++)
+                this->_allocator.destroy(this->_v + i);
+            this->_size = 0;
+        }
+
+        template <class InputIterator>
+        void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
+        {
+            size_type size;
+
+            size = ft::distance(first, last);
+            if(size > this->capacity())
+                this->reserve(size);
+
+            InputIterator it = first;
+            size_type  i(0);
+            while(it != last)
+            {
+                this->_v[i] = *it;
+                i++;
+                it++;
+            }
+            this->_size = size;
+        }
+
+        void assign (size_type n, const value_type& val)
+        {
+            if(n > this->capacity())
+                this->reserve(n);
+
+            for(size_type i = 0; i < this->size(); i++)
+                this->_v[i] = val;
+            for(size_type i = this->size(); i < n; i++)
+                this->_allocator.construct(this->_v + i, val);
+            this->_size = n;
         }
 // modifiers [ end ]
 
@@ -276,7 +305,9 @@ namespace ft {
 
 //    destructor of the class
         ~vector() {
-            _allocator.deallocate(_v, this->capacity());
+            for(size_type i = 0; i < this->size(); i++)
+                this->_allocator.destroy(this->_v + i);
+            this->_allocator.deallocate(this->_v, this->capacity());
         }
 
 /*
@@ -325,6 +356,18 @@ namespace ft {
         void _dup(value_type *dest, value_type *src, size_type size) {
             for (size_type i = 0; i < size; i++)
                 dest[i] = src[i];
+        }
+
+        void _reconstruct(value_type *dest, value_type *src, size_type size) {
+            for (size_type i = 0; i < size; i++)
+                this->_allocator.construct(dest + i , src[i]);
+        }
+
+        void    _destroy()
+        {
+            for(size_type i = 0; i < this->size(); i++)
+                this->_allocator.destroy(this->_v + i);
+            this->_allocator.deallocate(this->_v, this->capacity());
         }
     };
 };

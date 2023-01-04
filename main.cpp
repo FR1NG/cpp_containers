@@ -12,27 +12,37 @@ void sep()
     std::cout << "=============================" << std::endl;
 }
 
-template<typename T>
 void test()
 {
-    std::vector<int> y(10, 10);
 
-//   std::cout <<  ft::distance(y.begin(), y.end()) << std::endl;
 
-    ft::vector<int> x(y.begin(), y.end());
-    ft::vector<int> z(x);
+    ft::vector<std::string> y;
+    for(int i = 0; i < 10; i++)
+        y.push_back("hello world: " + std::to_string(i));
+    ft::vector<std::string> x(y.begin(), y.end());
+    ft::vector<std::string> z(y.begin(), y.end());
 
+    x.assign(y.begin(), y.end());
+    z.assign(15, "negrito");
+// !   x.assign(y.begin(), y.end());
+// % dsfs 
+// ? dsfs 
+// tofix dsfs 
+// todo
+// tofix
+
+// tofix this is to fix
     print_vector(z, true);
+    sep();
+    print_vector(x, true);
 
-//    ft::enable_if<false, std::string>::type x = "10";
-
-//    std::cout << x << std::endl;
 }
 
 
 
 int main() {
 
-    test<int>();
-
+    test();
+    //    system("leaks progmar");
+    //while(true);
 }

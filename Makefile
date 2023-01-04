@@ -2,7 +2,7 @@ SRC =  main.cpp
 NAME = progmar
 OBJ=$(SRC:.cpp=.o)
 COMPILER=c++
-FLAGS=-Wall -Wextra -Werror -std=c++98
+FLAGS=-Wall -Wextra -Werror -std=c++98 -fsanitize=address
 
 all: $(NAME)
 
