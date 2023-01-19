@@ -1,11 +1,9 @@
-#include "vector.hpp"
 
+#include <iostream>
+#include <string>
 #include <vector>
+#include "vector/reverse_iterator.hpp"
 
-#include "dev/helper.h"
-#include <iterator>
-
-#include <type_traits>
 
 void sep()
 {
@@ -14,27 +12,7 @@ void sep()
 
 void test()
 {
-
-
-    ft::vector<std::string> y;
-    for(int i = 0; i < 10; i++)
-        y.push_back("hello world: " + std::to_string(i));
-    ft::vector<std::string> x(y.begin(), y.end());
-    ft::vector<std::string> z(y.begin(), y.end());
-
-    x.assign(y.begin(), y.end());
-    z.assign(15, "negrito");
-// !   x.assign(y.begin(), y.end());
-// % dsfs 
-// ? dsfs 
-// tofix dsfs 
-// todo
-// tofix
-
-// tofix this is to fix
-    print_vector(z, true);
-    sep();
-    print_vector(x, true);
+  reverse_iterator<std::vector<std::string> > x;
 
 }
 
