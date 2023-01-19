@@ -33,7 +33,7 @@ public:
   typedef T *pointer;
   typedef const T *const_pointer;
   typedef const vector_iterator<T> const_iterator;
-  typedef reverse_iterator<T> reverse_iterator;
+  typedef reverse_iterator<typename T::iterator> reverse_iterator;
   // typedef const typename reverse_iterator<T> const_reverse_iterator;
   iterator _iterator;
 
