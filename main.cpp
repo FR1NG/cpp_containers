@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include "vector/reverse_iterator.hpp"
-
+#include "vector.hpp"
 
 void sep()
 {
@@ -12,8 +12,8 @@ void sep()
 
 void test()
 {
-  reverse_iterator<std::vector<std::string> > x;
 
+    ft::vector<int> x;
 }
 
 

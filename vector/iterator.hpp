@@ -4,7 +4,6 @@
 
 #ifndef FT_CONTAINERS_VECTOR_ITERATOR_HPP
 #define FT_CONTAINERS_VECTOR_ITERATOR_HPP
-#include "../vector.hpp"
 
 template <class T>
 class vector_iterator {
