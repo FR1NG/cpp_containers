@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <stddef.h>
+#include <iterator>
 
 struct random_access_iterator_tag {};
 
@@ -27,7 +28,7 @@ struct iterator_traits<T*>
 };
 
 template<class T>
-struct iterator_traits<const T>
+struct iterator_traits<const T*>
 {
     typedef std::ptrdiff_t difference_type;
     typedef T value_type;

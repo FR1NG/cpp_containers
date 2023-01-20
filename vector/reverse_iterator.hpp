@@ -14,7 +14,7 @@ template <typename T> class reverse_iterator {
 public:
   // memer types
   typedef T iterator_type;
-  typedef typename iterator_traits<T>::iterator_catorgory iterator_catorgory;
+  typedef typename iterator_traits<T>::iterator_category iterator_category;
   typedef typename iterator_traits<T>::value_type value_type;
   typedef typename iterator_traits<T>::difference_type difference_type;
   typedef typename iterator_traits<T>::pointer pointer;
@@ -38,12 +38,12 @@ public:
     return reverse_iterator<T>(this->_it - n);
   }
 
-  reverse_iterator &operator++() {
+  reverse_iterator operator++() {
     this->_it--;
     return *this;
   }
-  reverse_iterator &operator++(int) {
-    reverse_iterator tmp = *this;
+  reverse_iterator operator++(int) {
+    reverse_iterator tmp  = *this;
     ++(*this);
     return tmp;
   }
@@ -57,7 +57,7 @@ public:
     return (*this);
   }
 
-  reverse_iterator &operator--(int) {
+  reverse_iterator operator--(int) {
     reverse_iterator tmp = *this;
     --(*this);
     return tmp;
@@ -80,8 +80,6 @@ private:
 template <class T> reverse_iterator<T>::reverse_iterator() : _it() {}
 
 template <class T> reverse_iterator<T>::~reverse_iterator() {
-  if (this->_it)
-    delete this->_it;
 }
 
 template <class T>

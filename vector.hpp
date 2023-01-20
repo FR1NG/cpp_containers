@@ -9,7 +9,6 @@
 #include "vector/iterator.hpp"
 #include "vector/reverse_iterator.hpp"
 #include <exception>
-#include <iostream>
 #include <memory>
 
 namespace ft {
@@ -20,21 +19,21 @@ template <typename IT> int distance(const IT &begin, const IT &end) {
   return -1;
 }
 
-template <typename T, typename Allocator = std::allocator<T>> class vector {
+template <typename T, typename Allocator = std::allocator<T> > class vector {
 
 public:
-  typedef vector_iterator<T> iterator;
-  typedef T value_type;
+  typedef typename Allocator::value_type value_type;
   typedef Allocator allocator_type;
   typedef std::size_t size_type;
   typedef std::ptrdiff_t difference_type;
-  typedef value_type &reference;
-  typedef const value_type &const_reference;
-  typedef T *pointer;
-  typedef const T *const_pointer;
-  typedef const vector_iterator<T> const_iterator;
-  typedef reverse_iterator<typename T::iterator> reverse_iterator;
-  // typedef const typename reverse_iterator<T> const_reverse_iterator;
+  typedef typename allocator_type::reference reference;
+  typedef typename allocator_type::const_reference const_reference;
+  typedef typename allocator_type::pointer pointer;
+  typedef typename allocator_type::const_pointer const_pointer;
+  typedef iterator<const_pointer> const_iterator;
+  typedef ft::iterator<pointer> iterator;
+  typedef ft::reverse_iterator<pointer> reverse_iterator;
+  typedef ft::reverse_iterator<const_pointer> const_reverse_iterator;
   iterator _iterator;
 
   //        constructors [ begin ]
@@ -57,7 +56,7 @@ public:
       i++;
       it++;
     }
-    this->_iterator.setPointer(_v);
+    
   }
 
   explicit vector(size_type count, const T &value = T(),
@@ -74,7 +73,6 @@ public:
     this->_size = x._size;
     this->_capacity = x._capacity;
     this->_v = this->_allocator.allocate(this->_capacity);
-    this->_iterator.setPointer(this->_v);
     //            this->_dup(this->_v, x._v, this->_size);
     this->_reconstruct(this->_v, x._v, this->_size);
   }
@@ -89,20 +87,13 @@ public:
         _v = _allocator.allocate(1);
         _v[0] = val;
         _size = _capacity = 1;
-        this->_iterator.setPointer(_v);
+        // 
       } else {
         reserve(_capacity * 2);
         _v[_size] = val;
         _size++;
       }
     }
-  }
-
-  void test() {
-    for (int i = 0; i < this->_size; i++)
-      std::cout << _v[i] << std::endl;
-    std::cout << "capacity " << this->_capacity << " size " << this->_size
-              << std::endl;
   }
   // operators [ begin ]
 
@@ -208,7 +199,7 @@ public:
     }
     _capacity = newCapacity;
     _v = tmp;
-    this->_iterator.setPointer(_v);
+    
   }
 
   void copy(T *newArray) {
@@ -259,19 +250,21 @@ public:
   // modifiers [ end ]
 
   // iterators [ begin ]
-  iterator begin() { return this->_iterator; }
+  iterator begin() { return iterator(this->_v); }
 
-  iterator end() { return this->_iterator + this->_size; }
+  iterator end() { return iterator(this->_v + this->size()); }
 
-  const_iterator begin() const { return this->_iterator; }
+  const_iterator begin() const { return iterator(this->_v); }
 
-  const_iterator end() const { return this->_iterator + this->_size; }
+  const_iterator end() const { return iterator(this->_v + this->size()); }
 
   // iterators [ end ]
 
   // reverse iterator [ begin ]
-  reverse_iterator rend() { return reverse_iterator(this->_v[0]); }
-  reverse_iterator rbegin() { return reverse_iterator(this->_v[this->size()]); }
+  reverse_iterator rend() { return reverse_iterator(this->_v); }
+  reverse_iterator rbegin() { return reverse_iterator(this->_v + this->size()); }
+  const_reverse_iterator rend() const { return reverse_iterator(this->_v); }
+  const_reverse_iterator rbegin() const { return reverse_iterator(this->_v + this->size()); }
   // reverse iterator [ end ]
 
   //    destructor of the class

@@ -2,7 +2,7 @@ SRC =  main.cpp
 NAME = progmar
 OBJ=$(SRC:.cpp=.o)
 COMPILER=c++
-FLAGS=-Wall -Wextra -Werror -std=c++98 -fsanitize=address
+FLAGS=-Wall -Wextra -Werror -std=c++98
 
 all: $(NAME)
 
@@ -15,6 +15,7 @@ $(NAME) : $(OBJ)
 test: re
 	@clear
 	@./progmar
+
 
 
 clean:
