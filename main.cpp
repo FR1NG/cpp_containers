@@ -18,13 +18,11 @@ int main ()
 
  ft::vector<std::string> str;
   for(int i = 0; i< 12; i++)
-    str.push_back("hello world " + std::to_string(i + 1));
+    str.push_back("two hello world " + std::to_string(i + 1));
 
     // print_vector(str, true);
-   ft::vector<std::string>::const_iterator it =  str.begin();
-
-  it++;
-  // *it = std::string("error");
-  std::cout << *it << std::endl;
+   typedef ft::vector<std::string>::const_iterator iterator;
   
+  for(iterator it = str.begin(); it != str.end(); it++)
+    std::cout << *it << std::endl;
 }

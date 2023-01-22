@@ -97,58 +97,58 @@ public:
 private:
   // data members
   iterator_type _it;
-}; // class iterator
+
+
 
 // relational operators
-
-template <class Iterator>
-bool operator==(const  iterator<Iterator> &lhs,
-                const  iterator<Iterator> &rhs) {
+template<class Iterator1, class Iterator2>
+friend bool operator==(const  iterator<Iterator1> &lhs,
+                const  iterator<Iterator2> &rhs) {
   return lhs.base() == rhs.base();
 }
 
-template <class Iterator>
-bool operator!=(const  iterator<Iterator> &lhs,
-                const  iterator<Iterator> &rhs) {
+template<class Iterator1, class Iterator2>
+friend bool operator!=(const  iterator<Iterator1> &lhs,
+                const  iterator<Iterator2> &rhs) {
   return lhs.base() != rhs.base();
 }
 
-template <class Iterator>
-bool operator<(const  iterator<Iterator> &lhs,
-               const  iterator<Iterator> &rhs) {
+template<class Iterator1, class Iterator2>
+friend bool operator<(const  iterator<Iterator1> &lhs,
+               const  iterator<Iterator2> &rhs) {
   return lhs.base() < rhs.base();
 }
 
-template <class Iterator>
-bool operator<=(const  iterator<Iterator> &lhs,
-                const  iterator<Iterator> &rhs) {
+template<class Iterator1, class Iterator2>
+friend bool operator<=(const  iterator<Iterator1> &lhs,
+                const  iterator<Iterator2> &rhs) {
   return lhs.base() <= rhs.base();
 }
 
-template <class Iterator>
-bool operator>(const  iterator<Iterator> &lhs,
-               const  iterator<Iterator> &rhs) {
+template<class Iterator1, class Iterator2>
+friend bool operator>(const  iterator<Iterator1> &lhs,
+               const  iterator<Iterator2> &rhs) {
   return lhs.base() > rhs.base();
 }
 
-template <class Iterator>
-bool operator>=(const  iterator<Iterator> &lhs,
-                const  iterator<Iterator> &rhs) {
+template<class Iterator1, class Iterator2>
+friend bool operator>=(const  iterator<Iterator1> &lhs,
+                const  iterator<Iterator2> &rhs) {
   return lhs.base() >= rhs.base();
 }
 
-template <class Iterator>
-iterator<Iterator>
-operator+(typename  iterator<Iterator>::difference_type n,
+template<class Iterator1, class Iterator2>
+friend iterator<Iterator> operator+(typename  iterator<Iterator>::difference_type n,
           const  iterator<Iterator> &rev_it) {
   return rev_it + n;
 }
 
-template <class Iterator>
-typename  iterator<Iterator>::difference_type
-operator-(const  iterator<Iterator> &lhs,
+template<class Iterator1, class Iterator2>
+friend typename  iterator<Iterator>::difference_type operator-(const  iterator<Iterator> &lhs,
           const  iterator<Iterator> &rhs) {
   return rhs.base() - lhs.base();
 }
+}; // class iterator
+
 } // namespace ft
 #endif // FT_CONTAINERS_VECTOR_iterator_HPP
