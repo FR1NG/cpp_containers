@@ -1,29 +1,30 @@
 
-#include "vector.hpp"
-#include "vector/reverse_iterator.hpp"
 #include <iostream>
+#include "vector.hpp"
+#include "vector/iterator.hpp"
 #include <string>
 #include <vector>
+#include "dev/helper.h"
 
-void sep() { std::cout << "=============================" << std::endl; }
 
-void test() {
+// const std::string &test()
+// {
+//   const std::string str = "hello world";
+//   return str;
+// }
 
-  ft::vector<int> x;
-  for(int i = 0; i < 10; i++)
-    x.push_back(i + 1);
-  ft::vector<int>::reverse_iterator it = x.rend();
-  it--;
+int main ()
+{
+
+ ft::vector<std::string> str;
+  for(int i = 0; i< 12; i++)
+    str.push_back("hello world " + std::to_string(i + 1));
+
+    // print_vector(str, true);
+   ft::vector<std::string>::const_iterator it =  str.begin();
+
+  it++;
+  // *it = std::string("error");
   std::cout << *it << std::endl;
-  // rit++;
-  // std::cout << *rit << std::endl;
-  // std::reverse_iterator<int> z;
-  // std::vector<int> w;
-}
-
-int main() {
-
-  test();
-  //    system("leaks progmar");
-  // while(true);
+  
 }

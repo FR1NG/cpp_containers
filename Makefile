@@ -1,18 +1,15 @@
 SRC =  main.cpp
-NAME = progmar
-OBJ=$(SRC:.cpp=.o)
+NAME = test
 COMPILER=c++
 FLAGS=-Wall -Wextra -Werror -std=c++98
 
 all: $(NAME)
 
-$(NAME) : $(OBJ)
+$(NAME) : $(SRC)
 	@$(COMPILER) $(FLAGS) $^ -o $@
 
-%.o:%.cpp %.hpp
-	@$(COMPILER) $(FLAGS) -c $< -o $@
 
-test: re
+t: re
 	@clear
 	@./progmar
 

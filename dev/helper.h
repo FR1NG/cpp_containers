@@ -5,6 +5,7 @@
 #ifndef FT_CONTAINERS_HELPER_H
 #define FT_CONTAINERS_HELPER_H
 #include <cmath>
+#include <iostream>
 
 template<typename T>
 void print_vector(T &vec, bool printContent)
@@ -18,8 +19,8 @@ void print_vector(T &vec, bool printContent)
 }
 
 
-int calculate(int x)
-{
-    return x == 9 ? 16 : pow(2, ceil(sqrtf(x)));
-}
+// int calculate(int x)
+// {
+    // return x == 9 ? 16 : pow(2, ceil(sqrtf(x)));
+// }
 #endif //FT_CONTAINERS_HELPER_H
