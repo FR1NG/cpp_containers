@@ -39,10 +39,10 @@ namespace ft
     typedef typename allocator_type::const_pointer const_pointer;
     typedef ft::iterator<pointer> iterator;
     typedef ft::iterator<const_pointer> const_iterator;
-    typedef ft::reverse_iterator<pointer> reverse_iterator;
-    typedef ft::reverse_iterator<const_pointer> const_reverse_iterator;
+    typedef ft::reverse_iterator<iterator> reverse_iterator;
+    typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
     
-    // //        constructors [ begin ]
+    //        constructors [ begin ]
     vector() : _v(nullptr), _size(0), _capacity(0) {};
 
     explicit vector(const Allocator &alloc) : _allocator(alloc), _v(nullptr), _size(0), _capacity(0) {}
@@ -55,32 +55,31 @@ namespace ft
       size_type count = ft::distance(first, last);
       this->_v = this->_allocator.allocate(count);
       this->_size = this->_capacity = count;
-      InputIt it = first;
       size_type i = 0;
-      while (it != last)
-      {
-        this->_allocator.construct(this->_v + i, *it);
-        i++;
-        it++;
-      }
+
+        for(InputIt it = first; it != last; it++)
+        {
+            _allocator.construct(_v + i, *it);
+            i++;
+        }
     }
 
     explicit vector(size_type count, const T &value = T(),
                     const Allocator &alloc = Allocator())
         : _allocator(alloc)
     {
-      this->reserve(count);
+        this->_v = this->_allocator.allocate(count);
       for (size_type i = 0; i < count; i++)
         this->_allocator.construct(this->_v + i, value);
       this->_size = count;
+      this->_capacity = count;
     }
 
-    vector(const vector &x) : _capacity(0), _size(0)
+    vector(const vector &x) : _size(0), _capacity(0)
     {
       this->_size = x._size;
       this->_capacity = x._capacity;
       this->_v = this->_allocator.allocate(this->_capacity);
-      //            this->_dup(this->_v, x._v, this->_size);
       this->_reconstruct(this->_v, x._v, this->_size);
     }
     //        constructors [ end ]
@@ -155,7 +154,8 @@ namespace ft
         else
         {
           reserve(_capacity * 2);
-          _v[_size] = val;
+          this->_allocator.construct(this->_v + this->size(), val);
+//          _v[_size] = val;
           _size++;
         }
       }
@@ -178,7 +178,7 @@ namespace ft
     {
       if (this->_size != vec._size)
         return false;
-      for (int i = 0; i < this->_size; i++)
+      for (size_type i = 0; i < this->_size; i++)
       {
         if (this->_v[i] != vec._v[i])
           return false;
@@ -209,15 +209,15 @@ namespace ft
       size_type i;
 
       i = 0;
-      while (i < this->_size && i < vec._size)
+      while (i < this->size() && i < vec.size())
       {
         if (this->_v[i] > vec._v[i])
           return true;
         i++;
       }
-      if (this->_size < vec._size)
-        return false;
-      return true;
+      if (this->_size >= vec._size)
+        return true;
+      return false;
     }
 
     bool operator<(const vector &vec)
@@ -261,7 +261,35 @@ namespace ft
       return false;
     }
 
-    size_type size() const { return this->_size; }
+    void resize (size_type n, value_type val = value_type())
+    {
+        if (n < this->size())
+        {
+            for(size_type i = n; i < this->size(); i++)
+                this->_allocator.destroy(this->_v + i);
+//            this->_allocator.deallocate(this->_v + n, this->size() - n);
+        }
+        else
+        {
+            if(n > this->capacity())
+            {
+//                this->reserve(this->capacity() + n);
+                for(size_type i = this->size(); i < n; i++)
+                    this->push_back(val);
+//                    this->_allocator.construct(this->_v + i, val);
+//                this->_capacity = n;
+            }
+            else
+            {
+                for(size_type i = this->size(); i < n; i++)
+                    this->_allocator.construct(this->_v + i, val);
+            }
+        }
+        this->_size = n;
+    }
+
+
+      size_type size() const { return this->_size; }
 
     size_type max_size() const
     {
@@ -341,10 +369,10 @@ namespace ft
     // ? iterators [ end ]
 
     // reverse iterator [ begin ]
-    reverse_iterator rend() { return reverse_iterator(this->_v); }
-    reverse_iterator rbegin() { return reverse_iterator(this->_v + this->size()); }
-    const_reverse_iterator rend() const { return const_reverse_iterator(this->_v); }
-    const_reverse_iterator rbegin() const { return const_reverse_iterator(this->_v + this->size()); }
+    reverse_iterator rend() { return reverse_iterator(this->begin()); }
+    reverse_iterator rbegin() { return reverse_iterator(this->end()); }
+    const_reverse_iterator rend() const { return const_reverse_iterator(this->begin()); }
+    const_reverse_iterator rbegin() const { return const_reverse_iterator(this->end()); }
     // reverse iterator [ end ]
 
     //    destructor of the class
@@ -442,12 +470,34 @@ namespace ft
             this->_allocator.destroy(this->_v);
             this->_allocator.deallocate(this->_v, this->_capacity);
             this->_v = tmp;
-            this->_iterator.setPointer(tmp);
             this->_size += count;
             this->_capacity = this->size();
         }
         return pos;
     }
+
+//    ! prototypes only
+      void pop_back() {};
+      iterator insert (iterator position, const value_type& val){
+          (void)position;
+          (void)val;
+      };
+      void insert (iterator position, size_type n, const value_type& val){
+          (void)position;
+          (void)val;
+          (void)n;
+      };
+      template <class InputIterator>    void insert (iterator position, InputIterator first, InputIterator last){
+          (void)position;
+          (void)first;
+          (void)last;
+      };
+      void swap (vector& x){
+          (void)x;
+      };
+//      template <class... Args>iterator emplace (const_iterator position, Args&&... args);
+//      template <class... Args>  void emplace_back (Args&&... args);
+
 
   private:
     allocator_type _allocator;

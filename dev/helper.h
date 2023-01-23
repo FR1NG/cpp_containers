@@ -7,10 +7,16 @@
 #include <cmath>
 #include <iostream>
 
+void sep()
+{
+    std::cout << "===================================================" << std::endl;
+}
+
 template<typename T>
 void print_vector(T &vec, bool printContent)
 {
     std::cout <<  "capacity: " << vec.capacity() << " size: " << vec.size() << std::endl;
+    std::cout << "=====================================" << std::endl;
     if (printContent)
     {
         for(typename T::iterator ix = vec.begin(); ix < vec.end(); ix++)

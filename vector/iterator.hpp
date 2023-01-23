@@ -71,7 +71,7 @@ public:
   }
 
    iterator operator-(difference_type n) const {
-    return iterator(this->_it + n);
+    return iterator(this->_it - n);
   }
 
   iterator &operator--() {
@@ -90,7 +90,9 @@ public:
     return (*this);
   }
 
-  pointer operator->() const { return &(operator*()); }
+  pointer operator->() { return &(operator*()); }
+
+  const pointer operator->() const { return &(operator*()); }
 
   reference operator[](difference_type n) const { return this->_it[n]; }
 
@@ -137,17 +139,18 @@ friend bool operator>=(const  iterator<Iterator1> &lhs,
   return lhs.base() >= rhs.base();
 }
 
-template<class Iterator1, class Iterator2>
-friend iterator<Iterator> operator+(typename  iterator<Iterator>::difference_type n,
-          const  iterator<Iterator> &rev_it) {
-  return rev_it + n;
+//template<class Iterator1>
+friend iterator operator+(typename  iterator::difference_type n,
+          const  iterator &it) {
+  return iterator(it + n);
 }
 
-template<class Iterator1, class Iterator2>
-friend typename  iterator<Iterator>::difference_type operator-(const  iterator<Iterator> &lhs,
-          const  iterator<Iterator> &rhs) {
-  return rhs.base() - lhs.base();
+template <class It>
+ friend typename iterator<It>::difference_type operator- (    const iterator<It>& lhs,    const iterator<It>& rhs)
+{
+    return  lhs.base() - rhs.base();
 }
+
 }; // class iterator
 
 } // namespace ft

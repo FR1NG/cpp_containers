@@ -11,7 +11,7 @@ $(NAME) : $(SRC)
 
 t: re
 	@clear
-	@./progmar
+	@./${NAME}
 
 
 
