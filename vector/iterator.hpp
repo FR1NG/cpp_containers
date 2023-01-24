@@ -139,14 +139,14 @@ friend bool operator>=(const  iterator<Iterator1> &lhs,
   return lhs.base() >= rhs.base();
 }
 
-//template<class Iterator1>
-friend iterator operator+(typename  iterator::difference_type n,
-          const  iterator &it) {
-  return iterator(it + n);
+template<class Iterator1>
+friend iterator<Iterator1> operator+(typename  iterator<Iterator1>::difference_type n,
+          const  iterator<Iterator1> &it) {
+  return iterator<Iterator1>(it + n);
 }
 
 template <class It>
- friend typename iterator<It>::difference_type operator- (    const iterator<It>& lhs,    const iterator<It>& rhs)
+ friend typename iterator<It>::difference_type operator-(    const iterator<It>& lhs,    const iterator<It>& rhs)
 {
     return  lhs.base() - rhs.base();
 }

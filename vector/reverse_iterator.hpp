@@ -47,7 +47,9 @@ namespace ft {
         }
 
         reference operator*() {
-            return (*_it);
+            iterator_type tmp = this->_it;
+            tmp--;
+            return (*tmp);
         }
 
         const reference operator*() const {
@@ -139,16 +141,18 @@ namespace ft {
             return lhs.base() >= rhs.base();
         }
 
-        friend reverse_iterator operator+(typename reverse_iterator::difference_type n,
-                                          const reverse_iterator &it) {
-            return reverse_iterator(it + n);
+        template<class It>
+        friend typename reverse_iterator<It>::difference_type
+        operator-(const reverse_iterator<It> &lhs, const reverse_iterator<It> &rhs) {
+            return lhs.base() - rhs.base();
         }
 
-        template <class It>
-        friend typename iterator<It>::difference_type operator- (    const iterator<It>& lhs,    const iterator<It>& rhs)
-        {
-            return  lhs.base() - rhs.base();
+        template<class It>
+        friend reverse_iterator<It>
+        operator+(typename reverse_iterator<It>::difference_type n, const reverse_iterator<It> &rev_it) {
+            return reverse_iterator<It>(rev_it + n);
         }
+
     }; // class iterator
 
 } // namespace ft
