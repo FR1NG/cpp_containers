@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include "dev/helper.h"
-#include <deque>
+#include <stack>
 
 using std::cout;
 using std::endl;
@@ -55,25 +55,18 @@ void test(int init, int size, T &vec)
 
 int main ()
 {
-//    stdvector x;
-//    vector y;
-
-//    test(9, 3, x);
-//    sep();
-//    test(9, 3, y);
-
-//    test(9, 3, y);
-//    for (reverse_iterator rit= y.rbegin() - 1;  rit != y.rend(); rit++) {
-//        std::cout << *rit << std::endl;
+//    stdvector sv;
+//    for (int i = 0; i < 10; ++i) {
+//        sv.push_back("key " + std::to_string(i));
+////        mp["key " + std::to_string(i)] = "value " + std::to_string(i);
 //    }
 //
-//    sep();
+//    vector v(5, "hello");
 //
-//    for (iterator it = y.begin(); it != y.end() ; it++) {
-//        std::cout << *it << std::endl;
-//    }
+//    v.insert(v.begin() + 2, sv.begin(), sv.end());
+//    print_vector(v, true);
 
-int i = 0;
-for(; i<10;i++)
-    cout << i << endl;
+stdvector sv(10, "hello");
+vector v(10, "helloz");
+print_vectors<stdvector, vector>(sv, v, true);
 }

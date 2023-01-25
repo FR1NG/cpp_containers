@@ -397,9 +397,7 @@ namespace ft {
         }
 
         template <class InputIterator>
-        void insert (iterator position, InputIterator first, InputIterator last,
-                     typename enable_if<!is_integral<InputIt>::value, InputIterator>::type =
-                     InputIterator())
+        void insert (iterator position, InputIterator first, InputIterator last)
         {
                 size_type number = std::distance(first, last);
             if (this->size() + number > this->capacity())
