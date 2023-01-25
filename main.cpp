@@ -55,18 +55,19 @@ void test(int init, int size, T &vec)
 
 int main ()
 {
-//    stdvector sv;
-//    for (int i = 0; i < 10; ++i) {
-//        sv.push_back("key " + std::to_string(i));
-////        mp["key " + std::to_string(i)] = "value " + std::to_string(i);
-//    }
-//
-//    vector v(5, "hello");
-//
-//    v.insert(v.begin() + 2, sv.begin(), sv.end());
-//    print_vector(v, true);
+    stdvector sv;
+    for (int i = 0; i < 10; ++i) {
+        sv.push_back("key " + std::to_string(i));
+//        mp["key " + std::to_string(i)] = "value " + std::to_string(i);
+    }
 
-stdvector sv(10, "hello");
-vector v(10, "helloz");
-print_vectors<stdvector, vector>(sv, v, true);
+    vector v(5, "hello");
+    stdvector sv2(5, "hello");
+
+
+    v.insert(v.begin(), sv.begin(), sv.end());
+    sv2.insert(sv2.begin(), sv.begin(), sv.end());
+
+
+print_vectors<stdvector, vector>(sv2, v, true);
 }
