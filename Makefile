@@ -13,7 +13,8 @@ t: re
 	@clear
 	@./${NAME}
 
-
+debug: $(SRC)
+	@$(COMPILER) $(FLAGS) -fsanitize=address $^ -o $@
 
 clean:
 	@rm -rf $(OBJ)

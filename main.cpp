@@ -1,6 +1,6 @@
 
 #include <iostream>
-//#include "vector.hpp"
+#include "vector.hpp"
 #include "vector/iterator.hpp"
 #include <string>
 #include <vector>
@@ -9,9 +9,9 @@
 
 using std::cout;
 using std::endl;
-//typedef ft::vector<std::string>::iterator iterator;
-//typedef ft::vector<std::string>::reverse_iterator  reverse_iterator;
-//typedef  ft::vector<std::string> vector;
+typedef ft::vector<std::string>::iterator iterator;
+typedef ft::vector<std::string>::reverse_iterator  reverse_iterator;
+typedef  ft::vector<std::string> vector;
 typedef std::vector<std::string>::iterator stditerator;
 typedef std::vector<std::string>::reverse_iterator  stdreverse_iterator;
 typedef  std::vector<std::string> stdvector;
@@ -36,14 +36,44 @@ typedef  std::vector<std::string> stdvector;
 //    print_vector(v, true);
 //}
 
+//? to handle
+/* ?
+ * when capacity is zero
+ *
+ ? */
+
+template<class T>
+void test(int init, int size, T &vec)
+{
+    for (int i = 0; i < init; ++i) {
+        vec.push_back("pushed " + std::to_string(i));
+    }
+//    print_vector(vec, true);
+    vec.insert(vec.end() + 3, size, "inserted");
+    print_vector(vec, true);
+}
 
 int main ()
 {
-    stdvector x;
-    for (int i = 0; i < 5; ++i) {
-        x.push_back("inserted");
-    }
-    print_vector(x, true);
-    x.insert(x.end(), 2, "inserted");
-    print_vector(x, true);
+//    stdvector x;
+//    vector y;
+
+//    test(9, 3, x);
+//    sep();
+//    test(9, 3, y);
+
+//    test(9, 3, y);
+//    for (reverse_iterator rit= y.rbegin() - 1;  rit != y.rend(); rit++) {
+//        std::cout << *rit << std::endl;
+//    }
+//
+//    sep();
+//
+//    for (iterator it = y.begin(); it != y.end() ; it++) {
+//        std::cout << *it << std::endl;
+//    }
+
+int i = 0;
+for(; i<10;i++)
+    cout << i << endl;
 }
