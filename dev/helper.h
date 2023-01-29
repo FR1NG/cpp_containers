@@ -36,7 +36,7 @@ void print_vectors(T& v1, U& v2, bool printContent)
         typename U::iterator iy = v2.begin();
         while(ix != v1.end() && iy != v2.end())
         {
-            std::cout << "vector 1 value : " << *ix  << std::setw(5) << "||"  << std::setw(20) << "vector 2 value : " << *iy ;
+            std::cout << "STD : " << *ix  << std::setw(5) << "||"  << std::setw(20) << "FT : " << *iy ;
             std::cout << std::setw(10) <<  (*ix == *iy ? "\033[1;32m ok\033[0m" : "\033[1;31m failed\033[0m") << std::endl;
             ix++;
             iy++;

@@ -33,9 +33,7 @@ namespace ft {
         ~reverse_iterator() {}
 
         iterator_type base() const {
-            iterator_type it = this->_it;
-            it--;
-            return it;
+            return this->_it;
         }
 
 
@@ -98,11 +96,8 @@ namespace ft {
 
         pointer operator->() const { return &(operator*()); }
 
-        reference operator[](difference_type n) const { return this->_it[n]; }
+        reference operator[](difference_type n) const { return this->_it[-n - 1]; }
 
-    private:
-        // data members
-        iterator_type _it;
 
         // relational operators
         template<class Iterator1, class Iterator2>
@@ -120,31 +115,31 @@ namespace ft {
         template<class Iterator1, class Iterator2>
         friend bool operator<(const reverse_iterator<Iterator1> &lhs,
                               const reverse_iterator<Iterator2> &rhs) {
-            return lhs.base() < rhs.base();
+            return lhs.base() > rhs.base();
         }
 
         template<class Iterator1, class Iterator2>
         friend bool operator<=(const reverse_iterator<Iterator1> &lhs,
                                const reverse_iterator<Iterator2> &rhs) {
-            return lhs.base() <= rhs.base();
+            return lhs.base() >= rhs.base();
         }
 
         template<class Iterator1, class Iterator2>
         friend bool operator>(const reverse_iterator<Iterator1> &lhs,
                               const reverse_iterator<Iterator2> &rhs) {
-            return lhs.base() > rhs.base();
+            return lhs.base() < rhs.base();
         }
 
         template<class Iterator1, class Iterator2>
         friend bool operator>=(const reverse_iterator<Iterator1> &lhs,
                                const reverse_iterator<Iterator2> &rhs) {
-            return lhs.base() >= rhs.base();
+            return lhs.base() <= rhs.base();
         }
 
         template<class It>
         friend typename reverse_iterator<It>::difference_type
         operator-(const reverse_iterator<It> &lhs, const reverse_iterator<It> &rhs) {
-            return lhs.base() - rhs.base();
+            return rhs.base() - lhs.base();
         }
 
         template<class It>
@@ -153,6 +148,9 @@ namespace ft {
             return reverse_iterator<It>(rev_it + n);
         }
 
+    private:
+        // data members
+        iterator_type _it;
     }; // class iterator
 
 } // namespace ft
