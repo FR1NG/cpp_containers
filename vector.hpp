@@ -405,6 +405,17 @@ public:
     this->_size -= range;
     return this->begin() + position;   
   }
+
+  void swap(vector &x)
+  {
+    vector tmp(*this);
+
+    tmp._capacity = this->capacity(); 
+    *this = x;
+    this->_capacity = x.capacity();
+    x = tmp;
+    x._capacity = tmp.capacity();
+  }
   // ? modifiers [ end ]
 
   // ? iterators [ begin ]
@@ -439,10 +450,6 @@ public:
       this->_allocator.deallocate(this->_v, this->capacity());
     }
   }
-
-  //    ! prototypes only
-
-  void swap(vector &x) { (void)x; };
 
   allocator_type get_allocator() const { return this->_allocator; }
 

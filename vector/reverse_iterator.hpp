@@ -94,7 +94,9 @@ namespace ft {
             return (*this);
         }
 
-        pointer operator->() const { return &(operator*()); }
+        pointer operator->() { return &(operator*()); }
+
+        const pointer operator->() const { return &(operator*()); }
 
         reference operator[](difference_type n) const { return this->_it[-n - 1]; }
 

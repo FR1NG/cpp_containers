@@ -39,17 +39,15 @@ int main()
   // y.insert(y.begin() + 1, 15);
   // print_vectors(y, x, true);
 
-    stdvector v(1, 15);
+    stdvector sv;
+    vector v;
 
-    v.insert(v.begin(), x.begin(), x.end());
-    v.erase(v.begin(), v.end());
-
-    vector v1(1, 15);
-
-    v1.insert(v1.begin(), x.begin(), x.end());
-    v1.erase(v1.begin(), v1.end());
-
-  print_vectors(v, v1, true);
+    
+    sv.swap(y);
+    v.swap(x);
+  
+  print_vectors(sv, v, true);
+  print_vectors(y, x, true);
 }
 
 
