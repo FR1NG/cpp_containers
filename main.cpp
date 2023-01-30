@@ -22,32 +22,46 @@ typedef  std::vector<int> stdvector;
  *
  ? */
 
+void test()
+{
+  //   vector x;
+  //   stdvector y;
+  //   for (int i = 0; i < 10; ++i) {
+  //       x.push_back(i);
+  //       y.push_back(i);
+  //   }
+
+  // vector tv;
+  // stdvector tsv;
+
+  // tv.assign(1, 1337);
+  // tsv.assign(1, 1337);
+  // print_vectors(y, x, true);
+  // print_vectors(tv, tsv, true);
+  vector x;
+  stdvector y;
+  vector xprim(100, 100);
+  stdvector yprim(100, 100);
+
+  for (int i = 0; i < 10000; i++) {
+    x.push_back(2);
+    y.push_back(2);
+  }
+  for (int i = 0; i < 500; i++) {
+    x.pop_back();
+    y.pop_back();
+  }
+  x.assign(10, 15);
+  y.assign(10, 15);
+  x.assign(xprim.begin(), xprim.begin() + 5);
+  y.assign(yprim.begin(), yprim.begin() + 5);
+  print_vectors(y, y, true);
+}
+
 int main()
 {
-    vector x;
-    stdvector y;
-    for (int i = 0; i < 10; ++i) {
-        x.push_back(i);
-        y.push_back(i);
-    }
-
-  // print_vectors(y, x, true);
-  // sep();
-  // x.reserve(19);
-  // y.reserve(19);
-  // x.insert(x.begin() + 1,15);
-  // y.insert(y.begin() + 1, 15);
-  // print_vectors(y, x, true);
-
-    stdvector sv;
-    vector v;
-
-    
-    sv.swap(y);
-    v.swap(x);
-  
-  print_vectors(sv, v, true);
-  print_vectors(y, x, true);
+  test();
 }
+
 
 

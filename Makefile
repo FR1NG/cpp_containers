@@ -15,6 +15,7 @@ t: re
 
 debug: $(SRC)
 	@$(COMPILER) $(FLAGS) -fsanitize=address $^ -o $@
+	@./debug
 
 clean:
 	@rm -rf $(OBJ)

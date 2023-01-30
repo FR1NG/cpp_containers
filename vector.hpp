@@ -5,22 +5,16 @@
 #ifndef FT_CONTAINERS_VECTOR_HPP
 #define FT_CONTAINERS_VECTOR_HPP
 
+#include "dev/helper.h"
 #include "vector/helpers.hpp"
 #include "vector/iterator.hpp"
 #include "vector/reverse_iterator.hpp"
 #include <exception>
 #include <iterator>
 #include <memory>
-#include <sys/_types/_size_t.h>
+#include <type_traits>
 
 namespace ft {
-
-template <typename IT> int distance(const IT &begin, const IT &end) {
-  if (end > begin)
-    return end - begin;
-  return -1;
-}
-
 template <typename T, typename Allocator = std::allocator<T> > class vector {
 
 public:
@@ -72,8 +66,10 @@ public:
   vector(const vector &x) : _size(0), _capacity(0) {
     this->_size = x._size;
     this->_capacity = x._capacity;
+    this->_allocator = x._allocator;
     this->_v = this->_allocator.allocate(this->_capacity);
-    this->_reconstruct(this->_v, x._v, this->_size);
+    for(size_type i = 0; i < x.size(); i++)
+      this->_allocator.construct(this->_v + i, x.at(i));
   }
   //        constructors [ end ]
 
@@ -108,13 +104,13 @@ public:
   // ? element access [ end ]
 
   // ? modifiers [ begin ]
-  void push_back(const T &val) {
-    if (this->size() < this->capacity()) {
+  void push_back(const value_type& val) {
+    if (this->size() + 1 < this->capacity()) {
       this->_allocator.construct(this->_v + this->size(), val);
       this->_size++;
     } else {
       if (this->capacity() == 0) {
-        this->_v = _allocator.allocate(1);
+        this->_v = this->_allocator.allocate(1);
         this->_allocator.construct(this->_v, val);
         this->_size = this->_capacity = 1;
       } else {
@@ -224,19 +220,19 @@ public:
   void assign(InputIterator first, InputIterator last,
               typename ft::enable_if<!ft::is_integral<InputIterator>::value,
                                      InputIterator>::type = InputIterator()) {
-    size_type size;
-
-    size = ft::distance(first, last);
-    if (size > this->capacity())
-      this->reserve(size);
-
-    InputIterator it = first;
-    size_type i(0);
-    while (it != last) {
-      this->_v[i] = *it;
-      i++;
-      it++;
+    size_type size = std::distance(first, last);
+    if (size > this->capacity()) {
+      this->_destroy();
+      this->_v = this->_allocator.allocate(size);
+      this->_capacity = size;
+    } else {
+      for (size_type i = 0; i < this->size(); i++)
+        this->_allocator.destroy(this->_v + i);
     }
+
+    size_type i = 0;
+    for(InputIterator it = first; it != last; it++, i++)
+      this->_allocator.construct(this->_v + i, *it);
     this->_size = size;
   }
 
@@ -244,9 +240,9 @@ public:
     if (n > this->capacity())
       this->reserve(n);
 
-    for (size_type i = 0; i < this->size(); i++)
-      this->_v[i] = val;
-    for (size_type i = this->size(); i < n; i++)
+    for(size_type i = 0; i < this->size(); i++)
+     this->_allocator.destroy(this->_v + i);
+    for(size_type i = 0; i < n; i++)
       this->_allocator.construct(this->_v + i, val);
     this->_size = n;
   }
@@ -406,15 +402,11 @@ public:
     return this->begin() + position;   
   }
 
-  void swap(vector &x)
-  {
-    vector tmp(*this);
-
-    tmp._capacity = this->capacity(); 
-    *this = x;
-    this->_capacity = x.capacity();
-    x = tmp;
-    x._capacity = tmp.capacity();
+  void swap(vector &x) {
+    std::swap(this->_capacity, x._capacity);
+    std::swap(this->_size, x._size);
+    std::swap(this->_allocator, x._allocator);
+    std::swap(this->_v, x._v);
   }
   // ? modifiers [ end ]
 
@@ -471,15 +463,31 @@ private:
   }
 
   void _destroy() {
-    for (size_type i = 0; i < this->size(); i++)
-      this->_allocator.destroy(this->_v + i);
-    this->_allocator.deallocate(this->_v, this->capacity());
+    if (this->capacity() > 0) {
+      for (size_type i = 0; i < this->size(); i++)
+        this->_allocator.destroy(this->_v + i);
+      this->_allocator.deallocate(this->_v, this->capacity());
+    }
   }
 };
-// relational operators
-//
-//
 
+/*
+* none_memver functions
+*/
+
+/*
+ * swap function
+ */
+
+template <class T, class Alloc>
+void swap(vector<T, Alloc> &x, vector<T, Alloc> &y)
+{
+  x.swap(y);
+}
+
+/*
+* relational operators
+*/
 template <class T, class Alloc>
 bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
   if (lhs.size() != rhs.size())
