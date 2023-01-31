@@ -5,6 +5,7 @@
 #ifndef FT_CONTAINERS_HELPERS_TPP
 #define FT_CONTAINERS_HELPERS_TPP
 #include  <cstddef>
+#include <iterator>
 namespace ft
 {
     template<typename T>
@@ -85,6 +86,19 @@ namespace ft
     template<typename T>
     struct enable_if<true, T> {typedef T type;};
 
+
+/*
+* helper function to check if iterator is random access tagged
+*/
+    template <class Iterator> 
+    struct is_input_iterator_tagged {
+      static const bool value = false;
+    };
+
+    template <>
+    struct is_input_iterator_tagged<std::input_iterator_tag> {
+      static const bool value = true;
+    };
 }
 
 #endif //FT_CONTAINERS_HELPERS_TPP

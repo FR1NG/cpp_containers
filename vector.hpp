@@ -130,9 +130,6 @@ public:
 
   // ? operators [ begin ]
   vector &operator=(const vector &vec) {
-    // !       don't forget to destroy the old object
-    //            ! need to back to ti lather to handle assignment of greater
-    //            size vector
     if (&vec == this)
       return (*this);
 
@@ -220,30 +217,66 @@ public:
   void assign(InputIterator first, InputIterator last,
               typename ft::enable_if<!ft::is_integral<InputIterator>::value,
                                      InputIterator>::type = InputIterator()) {
-    size_type size = std::distance(first, last);
-    if (size > this->capacity()) {
-      this->_destroy();
-      this->_v = this->_allocator.allocate(size);
-      this->_capacity = size;
+    if (is_input_iterator_tagged<typename std::iterator_traits<
+            InputIterator>::iterator_category>::value) {
+      vector tmp;
+      while (first != last) {
+        tmp.push_back(*first);
+        first++;
+      }
+      if (tmp.size() > this->capacity()) {
+        this->_destroy();
+        this->_v = this->_allocator.allocate(tmp.size());
+        this->_size = tmp.size();
+        this->_capacity = tmp.size();
+        for (size_type i = 0; i < tmp.size(); i++)
+          this->_allocator.construct(this->_v + i, tmp.at(i));
+      } else {
+        size_type counter = 0;
+        while (counter < this->size()) {
+          this->_allocator.destroy(this->_v + counter);
+          this->_allocator.construct(this->_v + counter, tmp.at(counter));
+          counter++;
+        }
+        while (counter < tmp.size()) {
+          this->_allocator.construct(this->_v + counter, tmp.at(counter));
+          counter++;
+        }
+        this->_size = tmp.size();
+      }
     } else {
-      for (size_type i = 0; i < this->size(); i++)
-        this->_allocator.destroy(this->_v + i);
+
+      size_type size = std::distance(first, last);
+      if (size > this->capacity()) {
+        this->_destroy();
+        this->_v = this->_allocator.allocate(size);
+        this->_capacity = size;
+      } else if (this->size() > 0) {
+        for (size_type i = 0; i < this->size(); i++)
+          this->_allocator.destroy(this->_v + i);
+      }
+
+      size_type i = 0;
+      for (InputIterator it = first; it != last; it++, i++)
+        this->_allocator.construct(this->_v + i, *it);
+      this->_size = size;
+    }
     }
 
-    size_type i = 0;
-    for(InputIterator it = first; it != last; it++, i++)
-      this->_allocator.construct(this->_v + i, *it);
-    this->_size = size;
-  }
-
   void assign(size_type n, const value_type &val) {
-    if (n > this->capacity())
-      this->reserve(n);
-
-    for(size_type i = 0; i < this->size(); i++)
-     this->_allocator.destroy(this->_v + i);
-    for(size_type i = 0; i < n; i++)
-      this->_allocator.construct(this->_v + i, val);
+    if(n <= this->capacity())
+    {
+      for(size_type i = 0; i < this->size(); i++)
+       this->_allocator.destroy(this->_v + i);
+      for(size_type i = 0; i < n; i++)
+        this->_allocator.construct(this->_v + i, val);
+    } else {
+      this->_destroy();
+      this->_v = this->_allocator.allocate(n);
+      this->_capacity = n;
+      for(size_type i = 0; i < n; i++)
+        this->_allocator.construct(this->_v + i, val);
+    }
     this->_size = n;
   }
 
