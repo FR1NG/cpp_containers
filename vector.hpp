@@ -12,6 +12,7 @@
 #include <exception>
 #include <iterator>
 #include <memory>
+#include <stdexcept>
 #include <type_traits>
 
 namespace ft {
@@ -231,8 +232,9 @@ public:
         this->_size = tmp.size();
       }
     } else {
-
-      size_type size = std::distance(first, last);
+      if(first > last)
+        throw std::length_error("first iterator is greater then last");
+      size_type size = ft::distance(first, last);
       if (size > this->capacity()) {
         this->_destroy();
         this->_v = this->_allocator.allocate(size);
