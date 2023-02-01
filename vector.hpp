@@ -269,7 +269,7 @@ public:
   }
 
   iterator insert(iterator position, const value_type &val) {
-    size_type dis = std::distance(this->begin(), position);
+    size_type dist = std::distance(this->begin(), position);
     if (position == this->end() && !this->empty()) {
       this->push_back(val);
     } else {
@@ -278,19 +278,19 @@ public:
         return this->begin();
       } else {
         iterator it = this->end();
-        size_type stop = std::distance(this->begin(), position);
         value_type tmp = *(this->rbegin());
         size_type i = this->size() - 1;
 
-        for (; i > 0 && i > stop; i--) {
+        for (; i > 0 && i > dist; i--) {
           this->_allocator.destroy(this->_v + i);
           this->_allocator.construct(this->_v + i, this->_v[i - 1]);
         }
+        this->_allocator.destroy(this->_v + i);
         this->_allocator.construct(this->_v + i, val);
         this->push_back(tmp);
       }
     }
-    return this->begin() + dis;
+    return this->begin() + dist;
   }
 
   void insert(iterator position, size_type n, const value_type &val) {
