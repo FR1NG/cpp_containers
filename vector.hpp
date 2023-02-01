@@ -410,6 +410,8 @@ public:
     size_type position = first_index;
     size_type move_from = first_index + range;
 
+    if(range == 0)
+      return this->begin();
     for(size_type i = move_from; i != this->size(); i++, first_index++)
     {
       this->_allocator.destroy(this->_v + first_index);
