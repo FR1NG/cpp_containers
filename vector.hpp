@@ -129,11 +129,12 @@ public:
     size_type allocated_size = this->capacity() >= vec.size() ? this->capacity() : vec.size();
     this->_destroy();
     this->_allocator = vec._allocator;
-    this->_v = this->_allocator.allocate(allocated_size);
-    for(size_type i = 0; i < vec.size(); i++)
+    if (vec.size() > 0)
+      this->_v = this->_allocator.allocate(allocated_size);
+    for (size_type i = 0; i < vec.size(); i++)
       this->_allocator.construct(this->_v + i, vec.at(i));
     this->_size = vec.size();
-    this->_capacity = allocated_size;
+    this->_capacity = vec.size() > 0 ? allocated_size : 0;
     return (*this);
   }
 
