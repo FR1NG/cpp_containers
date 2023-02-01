@@ -42,21 +42,14 @@ public:
          typename enable_if<!is_integral<InputIt>::value, InputIt>::type =
              InputIt())
       : _allocator(alloc), _v(NULL), _size(0), _capacity(0) {
-    size_type count = ft::distance(first, last);
-    this->_v = this->_allocator.allocate(count);
-    this->_size = this->_capacity = count;
-    size_type i = 0;
-
-    for (InputIt it = first; it != last; it++) {
-      _allocator.construct(_v + i, *it);
-      i++;
-    }
+    this->assign(first, last);
   }
 
   explicit vector(size_type count, const T &value = T(),
                   const Allocator &alloc = Allocator())
       : _allocator(alloc) {
-    this->_v = this->_allocator.allocate(count);
+    if(count != 0)
+      this->_v = this->_allocator.allocate(count);
     for (size_type i = 0; i < count; i++)
       this->_allocator.construct(this->_v + i, value);
     this->_size = count;
@@ -75,13 +68,13 @@ public:
 
   // ? element access [ begin ]
   reference at(size_type pos) {
-    if (pos > this->_size || pos < 0)
+    if (pos >= this->_size || pos < 0)
       throw std::out_of_range("pos is out of range");
     return this->_v[pos];
   }
 
   const_reference at(size_type pos) const {
-    if (pos > this->_size || pos < 0)
+    if (pos >= this->size() || pos < 0)
       throw std::out_of_range("pos is out of range");
     return this->_v[pos];
   }
@@ -133,22 +126,14 @@ public:
     if (&vec == this)
       return (*this);
 
-    if (vec.size() < this->capacity()) {
-      for (size_type i = 0; i < this->size(); i++)
-        this->_allocator.destroy(this->_v + i);
-      size_type counter = 0;
-      for (const_iterator it = vec.begin(); it < vec.end(); it++, counter++)
-        this->_allocator.construct(this->_v + counter, *it);
-      this->_size = vec.size();
-    } else {
-      pointer tmp;
-      tmp = this->_allocator.allocate(vec.capacity());
-      this->_destroy();
-      this->_v = tmp;
-      this->_size = vec.size();
-      this->_capacity = vec.capacity();
-      this->_reconstruct(this->_v, vec._v, this->_size);
-    }
+    size_type allocated_size = this->capacity() >= vec.size() ? this->capacity() : vec.size();
+    this->_destroy();
+    this->_allocator = vec._allocator;
+    this->_v = this->_allocator.allocate(allocated_size);
+    for(size_type i = 0; i < vec.size(); i++)
+      this->_allocator.construct(this->_v + i, vec.at(i));
+    this->_size = vec.size();
+    this->_capacity = allocated_size;
     return (*this);
   }
 
@@ -469,11 +454,7 @@ public:
 
   //    destructor of the class
   ~vector() {
-    if (this->_v) {
-      for (size_type i = 0; i < this->size(); i++)
-        this->_allocator.destroy(this->_v + i);
-      this->_allocator.deallocate(this->_v, this->capacity());
-    }
+    this->_destroy();
   }
 
   allocator_type get_allocator() const { return this->_allocator; }

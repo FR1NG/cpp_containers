@@ -13,14 +13,17 @@ t: re
 	@clear
 	@./${NAME}
 
-debug: $(SRC)
-	@$(COMPILER) $(FLAGS) -fsanitize=address $^ -o $@
+debug: fclean cdebug
 	@./debug
+
+cdebug: $(SRC) 
+	@$(COMPILER) $(FLAGS) -fsanitize=address $^ -o debug
 
 clean:
 	@rm -rf $(OBJ)
 
 fclean: clean
 	@rm -rf $(NAME)
+	@rm -rf debug
 
 re: fclean all
