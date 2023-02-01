@@ -232,8 +232,8 @@ public:
         this->_size = tmp.size();
       }
     } else {
-      if(first > last)
-        throw std::length_error("first iterator is greater then last");
+      // if(first > last)
+      //   throw std::length_error("first iterator is greater then last");
       size_type size = ft::distance(first, last);
       if (size > this->capacity()) {
         this->_destroy();
@@ -249,7 +249,7 @@ public:
         this->_allocator.construct(this->_v + i, *it);
       this->_size = size;
     }
-    }
+  }
 
   void assign(size_type n, const value_type &val) {
     if(n <= this->capacity())
@@ -269,6 +269,7 @@ public:
   }
 
   iterator insert(iterator position, const value_type &val) {
+    size_type dis = std::distance(this->begin(), position);
     if (position == this->end() && !this->empty()) {
       this->push_back(val);
     } else {
@@ -289,11 +290,13 @@ public:
         this->push_back(tmp);
       }
     }
-    return position;
+    return this->begin() + dis;
   }
 
   void insert(iterator position, size_type n, const value_type &val) {
-    if (n + this->size() > this->capacity()) {
+    if (n == 0)
+      return;
+    if (n + this->size() > this->capacity() || this->capacity() == 0) {
       size_type allocated_size;
       size_type old_size = this->size();
       iterator it = this->begin();
@@ -304,7 +307,7 @@ public:
           ? allocated_size = this->size() + n
           : allocated_size = this->capacity() * 2;
       tmp = this->_allocator.allocate(allocated_size);
-      while (it != position) {
+      while (it < position) {
         this->_allocator.construct(tmp + current, *it);
         it++;
         current++;
@@ -313,7 +316,7 @@ public:
         this->_allocator.construct(tmp + current, val);
         current++;
       }
-      while (it != this->end()) {
+      while (it < this->end()) {
         this->_allocator.construct(tmp + current, *it);
         it++;
         current++;
@@ -324,29 +327,39 @@ public:
       this->_capacity = allocated_size;
       this->_v = tmp;
     } else {
-      if (position >= this->end()) {
-        for (size_type i = 0; i < n; i++)
-          this->_allocator.construct(this->_v + this->size() + i, val);
-      } else {
-        iterator end = this->end() - 1;
-        size_type last_index = this->size() + n - 1;
-        while (end != position - 1) {
-          this->_allocator.construct(this->_v + last_index, *end);
-          end--;
-          last_index--;
-        }
-        for (size_type i = 0; i < n; i++) {
-          *(position) = val;
-          position++;
-        }
+      size_type copy_from = this->size() - 1;
+      size_type copy_to = copy_from + n;
+      size_type stop = std::distance(this->begin(), position);
+      while (copy_from >= stop) {
+        if (copy_to < this->size())
+          this->_allocator.destroy(this->_v + copy_to);
+        this->_allocator.construct(this->_v + copy_to,
+                                   *(this->begin() + copy_from));
+        copy_from--;
+        copy_to--;
       }
+      iterator st = position + n;
+      while (position < st)
+        {
+          *position = val;
+          position ++;
+        }
       this->_size += n;
     }
   }
 
+
   template <class InputIterator>
-  void insert(iterator position, InputIterator first, InputIterator last) {
-    size_type number = std::distance(first, last);
+  void insert(iterator position, InputIterator first, InputIterator last,
+              typename ft::enable_if<!ft::is_integral<InputIterator>::value,
+                                     InputIterator>::type = InputIterator()) {
+    // if(is_input_iterator_tagged<typename std::iterator_traits<InputIterator>::iterator_category>::value)
+    // {
+    //   vector v = _push_input(first, last);
+    //   _insert_handle_input(position, v.begin(), v.end(), v.size());
+    //   return;
+    // }
+    size_type number = ft::distance(first, last);
     if (this->capacity() == 0) {
       this->_v = this->_allocator.allocate(number);
       size_type counter = 0;
@@ -488,6 +501,65 @@ private:
       this->_allocator.deallocate(this->_v, this->capacity());
     }
   }
+
+
+  template<class InputIteator>
+  vector _push_input(InputIteator first, InputIteator last)
+{
+    vector v;
+    while (first != last) {
+      v.push_back(*first);
+      first++;
+    }
+    return v;
+  }
+  void _insert_handle_input(iterator position, iterator first, iterator last, size_type number)
+  {
+    if (this->capacity() == 0) {
+      this->_v = this->_allocator.allocate(number);
+      size_type counter = 0;
+      for (iterator it = first; it != last; it++, counter++)
+        this->_allocator.construct(this->_v + counter, *it);
+      this->_capacity = this->_size = number;
+      return;
+    }
+    if (this->size() + number > this->capacity()) {
+      size_type allocated_size = this->size() + number > this->capacity() * 2
+                                     ? this->size() + number
+                                     : this->capacity() * 2;
+      pointer tmp = this->_allocator.allocate(allocated_size);
+      size_type count = 0;
+      iterator it = this->begin();
+      size_type old_size = this->size();
+
+      for (; it != position; it++, count++)
+        this->_allocator.construct(tmp + count, *it);
+      for (iterator Iit = first; Iit != last; Iit++, count++)
+        this->_allocator.construct(tmp + count, *Iit);
+      for (; it != this->end(); it++, count++)
+        this->_allocator.construct(tmp + count, *it);
+      this->_destroy();
+      this->_size = old_size + number;
+      this->_capacity = allocated_size;
+      this->_v = tmp;
+    } else {
+      size_type copy_from = this->size() - 1;
+      size_type copy_to = copy_from + number;
+      size_type stop = std::distance(this->begin(), position);
+      while (copy_from >= stop) {
+        if (copy_to < this->size())
+          this->_allocator.destroy(this->_v + copy_to);
+        this->_allocator.construct(this->_v + copy_to,
+                                   *(this->begin() + copy_from));
+        copy_from--;
+        copy_to--;
+      }
+      for (iterator iit = first; iit != last; iit++, position++)
+        *position = *iit;
+      this->_size += number;
+    }
+  }
+
 };
 
 /*

@@ -43,31 +43,52 @@ std::vector<int> iterator_test(ft::vector<T> vector) {
 
 void test()
 {
-  //   vector x;
-  //   stdvector y;
-  //   for (int i = 0; i < 500; ++i) {
-  //       x.push_back(i);
-  //       y.push_back(i);
-  //   }
 
-  // std::vector<int> ff = iterator_test(x);
-  // vector test;
-  // stdvector testjouj;
+  stdvector sv;
+  vector v;
+  for(int i = 0; i < 3; i++)
+    {
+      sv.push_back(i);
+      v.push_back(i);
+    }
 
-  // test = x;
-  // testjouj = y;
-  // print_vectors(testjouj, test, true);
+  stdvector sv2;
+  vector v2;
 
-      vector x(0, -1);
-      stdvector y(0, -1);
+  // sv2.reserve(30);
+  // v2.reserve(30);
+  // sv2.insert(sv2.begin() + 2, sv.begin(), sv.end());
+  // v2.insert(v2.begin() + 2, v.begin(), v.end());
+ 
+ // print_vectors(sv2, v2, true);
+ //  sep();
+ //  sv2.insert(sv2.begin() + 2, 0, 10);
+ //  v2.insert(v2.begin() + 2, 0, 10);
+
+ //  v2.insert(v2.begin(), 0, 64);
+ //  v2.insert(v2.end(), 0, 64);
+ //  v2.insert(v2.end(), 10, 64);
+ //  v2.insert(v2.begin(), 5, -1);
+ //  v2.insert(v2.begin() + 1, 1, -9);
+
+
+ //  sv2.insert(sv2.begin(), 0, 64);
+ //  sv2.insert(sv2.end(), 0, 64);
+ //  sv2.insert(sv2.end(), 10, 64);
+ //  sv2.insert(sv2.begin(), 5, -1);
+ //  sv2.insert(sv2.begin() + 1, 1, -9);
+
+
+  cout << *(sv2.insert(sv2.end(), 1337)) << " " << *(v2.insert(v2.end(), 1337)) <<endl;
+  cout << *(sv2.insert(sv2.end(), 1337)) << " " << *(v2.insert(v2.end(), 1337)) <<endl;
+  print_vectors(sv2, v2, true);
   
-      print_vectors(y, x, true);
 }
 
 int main()
 {
   test();
-  system("leaks test");
+  // system("leaks test");
 }
 
 
