@@ -356,12 +356,14 @@ public:
   void insert(iterator position, InputIterator first, InputIterator last,
               typename ft::enable_if<!ft::is_integral<InputIterator>::value,
                                      InputIterator>::type = InputIterator()) {
-    // if(is_input_iterator_tagged<typename std::iterator_traits<InputIterator>::iterator_category>::value)
-    // {
-    //   vector v = _push_input(first, last);
-    //   _insert_handle_input(position, v.begin(), v.end(), v.size());
-    //   return;
-    // }
+    if(first == last)
+      return;
+    if(is_input_iterator_tagged<typename std::iterator_traits<InputIterator>::iterator_category>::value)
+    {
+      vector v = _push_input(first, last);
+      insert(position, v.begin(), v.end());
+      return;
+    }
     size_type number = ft::distance(first, last);
     if (this->capacity() == 0) {
       this->_v = this->_allocator.allocate(number);
@@ -402,8 +404,13 @@ public:
         copy_from--;
         copy_to--;
       }
-      for (InputIterator iit = first; iit != last; iit++, position++)
-        *position = *iit;
+      for(size_type i = stop; i < stop + number; i++)
+        {
+          if (i < this->size())
+            this->_allocator.destroy(this->_v + i);
+          this->_allocator.construct(this->_v + i, *first);
+          first++;
+        }
       this->_size += number;
     }
   }
@@ -516,53 +523,6 @@ private:
     }
     return v;
   }
-  void _insert_handle_input(iterator position, iterator first, iterator last, size_type number)
-  {
-    if (this->capacity() == 0) {
-      this->_v = this->_allocator.allocate(number);
-      size_type counter = 0;
-      for (iterator it = first; it != last; it++, counter++)
-        this->_allocator.construct(this->_v + counter, *it);
-      this->_capacity = this->_size = number;
-      return;
-    }
-    if (this->size() + number > this->capacity()) {
-      size_type allocated_size = this->size() + number > this->capacity() * 2
-                                     ? this->size() + number
-                                     : this->capacity() * 2;
-      pointer tmp = this->_allocator.allocate(allocated_size);
-      size_type count = 0;
-      iterator it = this->begin();
-      size_type old_size = this->size();
-
-      for (; it != position; it++, count++)
-        this->_allocator.construct(tmp + count, *it);
-      for (iterator Iit = first; Iit != last; Iit++, count++)
-        this->_allocator.construct(tmp + count, *Iit);
-      for (; it != this->end(); it++, count++)
-        this->_allocator.construct(tmp + count, *it);
-      this->_destroy();
-      this->_size = old_size + number;
-      this->_capacity = allocated_size;
-      this->_v = tmp;
-    } else {
-      size_type copy_from = this->size() - 1;
-      size_type copy_to = copy_from + number;
-      size_type stop = std::distance(this->begin(), position);
-      while (copy_from >= stop) {
-        if (copy_to < this->size())
-          this->_allocator.destroy(this->_v + copy_to);
-        this->_allocator.construct(this->_v + copy_to,
-                                   *(this->begin() + copy_from));
-        copy_from--;
-        copy_to--;
-      }
-      for (iterator iit = first; iit != last; iit++, position++)
-        *position = *iit;
-      this->_size += number;
-    }
-  }
-
 };
 
 /*
