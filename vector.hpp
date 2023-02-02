@@ -101,20 +101,15 @@ public:
 
   // ? modifiers [ begin ]
   void push_back(const value_type& val) {
-    if (this->size() + 1 < this->capacity()) {
-      this->_allocator.construct(this->_v + this->size(), val);
-      this->_size++;
-    } else {
-      if (this->capacity() == 0) {
-        this->_v = this->_allocator.allocate(1);
-        this->_allocator.construct(this->_v, val);
-        this->_size = this->_capacity = 1;
-      } else {
-        reserve(this->_capacity * 2);
-        this->_allocator.construct(this->_v + this->size(), val);
-        this->_size++;
-      }
+    if (this->capacity() <= this->size())
+    {
+      if (this->capacity() == 0)
+        this->reserve(1);
+      else
+       this->reserve(this->capacity() * 2);
     }
+    this->_allocator.construct(this->_v + this->size(), val);
+    this->_size++;
   }
 
   void pop_back() {
@@ -178,9 +173,11 @@ public:
   void reserve(size_type n) {
     if (n <= size())
       return;
-    if (n > this->capacity()) {
+    if (n > this->capacity()) 
+    {
       pointer tmp = _allocator.allocate(n);
-      if (this->capacity() != 0) {
+      if (this->capacity() != 0) 
+      {
         this->_reconstruct(tmp, this->_v, this->_size);
         this->_destroy();
       }
@@ -483,7 +480,10 @@ public:
 
   //    destructor of the class
   ~vector() {
-    this->_destroy();
+    this->clear();
+    if (this->capacity() > 0) {
+       this->_allocator.deallocate(this->_v, this->capacity());
+    }
   }
 
   allocator_type get_allocator() const { return this->_allocator; }
@@ -506,11 +506,10 @@ private:
   }
 
   void _destroy() {
-    if (this->capacity() > 0) {
-      for (size_type i = 0; i < this->size(); i++)
-        this->_allocator.destroy(this->_v + i);
+    for(size_type i = 0; i < this->size(); i++)
+      this->_allocator.destroy(this->_v + i);
+    if (this->capacity() > 0)
       this->_allocator.deallocate(this->_v, this->capacity());
-    }
   }
 
 
