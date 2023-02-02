@@ -99,6 +99,15 @@ namespace ft
     struct is_input_iterator_tagged<std::input_iterator_tag> {
       static const bool value = true;
     };
+
+/*
+* helper function that return the min of two numbers
+*/
+    template <class T, class U> size_t min(T a, U b) {
+      size_t x = static_cast<size_t>(a);
+      size_t y = static_cast<size_t>(b);
+      return (x > y ? y : x);
+    }
 }
 
 #endif //FT_CONTAINERS_HELPERS_TPP
