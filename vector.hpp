@@ -341,11 +341,11 @@ public:
         copy_from--;
         copy_to--;
       }
-      iterator st = position + n;
-      while (position < st)
+      for(size_type i = stop; i < stop + n; i++)
         {
-          *position = val;
-          position ++;
+          if (i < this->size())
+            this->_allocator.destroy(this->_v + i);
+          this->_allocator.construct(this->_v + i, val);
         }
       this->_size += n;
     }
