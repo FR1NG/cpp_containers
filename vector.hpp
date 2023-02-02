@@ -11,6 +11,7 @@
 #include "vector/reverse_iterator.hpp"
 #include <exception>
 #include <iterator>
+#include <limits>
 #include <memory>
 #include <stdexcept>
 #include <type_traits>
@@ -169,7 +170,9 @@ public:
 
   size_type size() const { return this->_size; }
 
-  size_type max_size() const { return this->_allocator.max_size(); }
+  size_type max_size() const {
+    return ft::min(this->_allocator.max_size(), std::numeric_limits<difference_type>::max());
+  }
 
   void reserve(size_type n) {
     if (n <= size())
