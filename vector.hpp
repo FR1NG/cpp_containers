@@ -58,13 +58,14 @@ public:
     this->_capacity = count;
   }
 
-  vector(const vector &x) : _size(0), _capacity(0) {
+  vector(const vector &x) : _allocator(x._allocator), _size(0) , _capacity(0){
+    // this->_allocator = x._allocator;
+    // this->_v = this->_allocator.allocate(this->_capacity);
+    // for(size_type i = 0; i < x.size(); i++)
+    //   this->_allocator.construct(this->_v + i, x.at(i));
+    this->assign(x.begin(), x.end());
     this->_size = x._size;
     this->_capacity = x._capacity;
-    this->_allocator = x._allocator;
-    this->_v = this->_allocator.allocate(this->_capacity);
-    for(size_type i = 0; i < x.size(); i++)
-      this->_allocator.construct(this->_v + i, x.at(i));
   }
   //        constructors [ end ]
 
