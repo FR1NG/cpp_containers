@@ -179,7 +179,7 @@ public:
       return;
     if (n > this->capacity()) {
       pointer tmp = _allocator.allocate(n);
-      if (this->size() != 0) {
+      if (this->capacity() != 0) {
         this->_reconstruct(tmp, this->_v, this->_size);
         this->_destroy();
       }
