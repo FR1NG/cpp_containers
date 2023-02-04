@@ -101,6 +101,17 @@ namespace ft
     };
 
 /*
+ * is_ft to check if vector is ft::vector or not
+ */
+
+template<class Type>
+struct is_std : public true_type{};
+
+template<class Type>
+struct is_std<std::vector<Type> > : public false_type{};
+
+
+/*
 * helper function that return the min of two numbers
 */
     template <class T, class U> size_t min(T a, U b) {

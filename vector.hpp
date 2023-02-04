@@ -59,10 +59,6 @@ public:
   }
 
   vector(const vector &x) : _allocator(x._allocator), _size(0) , _capacity(0){
-    // this->_allocator = x._allocator;
-    // this->_v = this->_allocator.allocate(this->_capacity);
-    // for(size_type i = 0; i < x.size(); i++)
-    //   this->_allocator.construct(this->_v + i, x.at(i));
     this->assign(x.begin(), x.end());
     this->_size = x._size;
     this->_capacity = x._capacity;
@@ -449,10 +445,20 @@ public:
   }
 
   void swap(vector &x) {
-    std::swap(this->_capacity, x._capacity);
-    std::swap(this->_size, x._size);
-    std::swap(this->_allocator, x._allocator);
-    std::swap(this->_v, x._v);
+    pointer v = this->data();
+    size_type size = this->size();
+    size_type capacity = this->capacity();
+    allocator_type alloc = this->_allocator;
+
+    this->_v = x.data();
+    this->_size = x._size;
+    this->_capacity = x._capacity; 
+    this->_allocator = x._allocator;
+
+    x._v = v;
+    x._size = size;
+    x._capacity = capacity;
+    x._allocator = alloc;
   }
   // ? modifiers [ end ]
 
