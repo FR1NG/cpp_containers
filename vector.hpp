@@ -362,6 +362,8 @@ public:
       insert(position, v.begin(), v.end());
       return;
     }
+    if (!_is_constructable(first, last))
+      throw std::bad_alloc();
     size_type number = ft::distance(first, last);
     if (this->capacity() == 0) {
       this->_v = this->_allocator.allocate(number);
@@ -523,21 +525,31 @@ private:
     }
     return v;
   }
+  template<class Iter>
+  bool _is_constructable(Iter first, Iter last)
+  {
+    bool result = true;
+    pointer tmp = this->_allocator.allocate(1);
+
+    while(first != last)
+      {
+        try {
+          this->_allocator.construct(tmp, *first);
+          this->_allocator.destroy(tmp);
+        } catch(...)
+        {
+          result = false;
+        }
+        first++;
+      }
+    this->_allocator.deallocate(tmp, 1);
+    return result;
+  }
 };
 
 /*
-* none_memver functions
+* none_member functions
 */
-
-/*
- * swap function
- */
-
-template <class T, class Alloc>
-void swap(vector<T, Alloc> &x, vector<T, Alloc> &y)
-{
-  x.swap(y);
-}
 
 /*
 * relational operators
@@ -617,6 +629,27 @@ bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
     return false;
   return true;
 }
+
+
+/*
+ * swap function
+ */
+
+template <class T, class Alloc>
+void swap(vector<T, Alloc> &x, vector<T, Alloc> &y) {
+  x.swap(y);
+}
 }; // namespace ft
+
+// namespace std {
+// /*
+//  * swap function
+//  */
+
+// template <class T, class Alloc>
+// void swap(ft::vector<T, Alloc> &x, ft::vector<T, Alloc> &y) {
+//   x.swap(y);
+// }
+// }; // namespace std
 
 #endif // FT_CONTAINERS_VECTOR_HPP
