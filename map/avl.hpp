@@ -5,29 +5,28 @@
 #include <stdexcept>
 #include <utility>
 
-
-template <class Key, class Value, class Type = std::pair<Key, Value>,
+template <class Key, class Value,
           class Compare = std::less<Key>,
-          class Allocator = std::allocator<Type> >
+          class Allocator = std::allocator<std::pair<const Key, Value> > >
 class Avl {
 public:
-  typedef Type value_type;
+  typedef std::pair<Key, Value> value_type;
   typedef value_type *pointer;
   typedef value_type &reference;
-
+  typedef Allocator allocator_type;
   typedef size_t size_type;
   // Node class [ begin ]
   class Node {
+
   private:
-    Type *data_;
+    value_type *data_;
     Node *left_;
     Node *right_;
     Node *parent_;
     Compare comparer_;
 
-
   public:
-    typedef Type value_type;
+    typedef std::pair<const Key, Value> value_type;
     typedef value_type *pinter;
     typedef value_type &reference;
 
@@ -35,7 +34,7 @@ public:
         : data_(NULL), left_(NULL), right_(NULL), parent_(NULL),
           comparer_(Compare()) {}
 
-    Node(const Type &data)
+    Node(const value_type &data)
         : data_(new value_type(data)), left_(NULL), right_(NULL), parent_(NULL),
           comparer_(Compare()) {}
 
@@ -87,6 +86,7 @@ public:
 private:
   Node *root_;
   size_type size_;
+  allocator_type allocator_;
   void recursive_insert_(Node *node, Node *parent) {
     if (*node == *parent) {
       throw std::runtime_error("duplicated key");
@@ -142,6 +142,12 @@ public:
       return NULL;
     }
     return newNode;
+  }
+
+  Node* insert(const Key& key, Value& value) {
+    value_type data = this->allocator_.allocate(1);
+    this->allocator_.construct(data, std::make_pair(key, value));
+    return this->insert(data);
   }
 
   void rebalence(Node *node) {
