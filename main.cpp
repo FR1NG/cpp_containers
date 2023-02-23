@@ -1,5 +1,7 @@
 
 #include "dev/helper.h"
+#include "map.hpp"
+#include "map/avl.hpp"
 #include "vector.hpp"
 #include "vector/iterator.hpp"
 #include <cstddef>
@@ -8,7 +10,9 @@
 #include <iostream>
 #include <stack>
 #include <string>
+#include <utility>
 #include <vector>
+#include <map>
 
 using std::cout;
 using std::endl;
@@ -25,128 +29,42 @@ typedef std::vector<int> stdvector;
  *
  ? */
 
-#define _ratio 10000
-std::vector<int> push_back_test(vector vector) {
-    std::vector<int> v;
-    for (int i = 0; i < 1; ++i) {
-        vector.push_back(i);
+void testMap() {
+  std::map<int, int> m;
+
+  m.insert(std::make_pair(10, 10));
+  m.insert(std::make_pair(20, 10));
+  m.insert(std::make_pair(5, 10));
+  m.insert(std::make_pair(15, 10));
+  m.insert(std::make_pair(22, 10));
+
+  std::map<int,int>::iterator it = m.begin();
+  while(it != m.end())
+    {
+      std::cout << "key : " << it->first << " value : " << it->second << std::endl;
+      it++;
     }
-    v.push_back(vector.size());
-    v.push_back(vector.capacity());
-    return v;
-}
-
-class B {
-public:
-    char *l;
-    int i;
-    B():l(nullptr), i(1) {};
-    B(const int &ex) {
-        this->i = ex;
-        this->l = new char('a');
-    };
-    virtual ~B() {
-        delete this->l;
-        this->l = nullptr;
-    };
-};
-
-class A : public B {
-public:
-    A():B(){};
-    A(const B* ex){
-        this->l = new char(*(ex->l));
-        this->i = ex->i;
-        if (ex->i == -1) throw "n";
-    }
-    ~A() {
-        delete this->l;
-        this->l = nullptr;
-    };
-};
-
-std::vector<int> insert_test_3() {
-    std::vector<int> v;
-  ft::vector<A> vv;
-  ft::vector<B*> v1;
-
-    std::unique_ptr<B> k2(new B(3));
-    std::unique_ptr<B> k3(new B(4));
-    std::unique_ptr<B> k4(new B(-1));
   
-    v1.push_back(&(*k2));
-    v1.push_back(&(*k3));
-    v1.push_back(&(*k4));
-    try { vv.insert(vv.begin(), v1.begin(), v1.end()); }
-    catch (...) {
-        v.push_back(vv.size());
-        v.push_back(vv.capacity());
-    }
-
-    return v;
 }
+void testAvl() {
+ Avl<std::string, std::string, std::pair<std::string, std::string> > avl;
 
-void insert_test_4() {
-  std::vector<A> vv;
-  ft::vector<A> ss;
-  std::vector<B*> v1;
-  std::vector<int> res1;
-  std::vector<int> res2;
-
-    std::unique_ptr<B> k2(new B(3));
-    std::unique_ptr<B> k3(new B(4));
-    std::unique_ptr<B> k4(new B(-1));
-  
-    v1.push_back(&(*k2));
-    v1.push_back(&(*k3));
-    v1.push_back(&(*k3));
-    v1.push_back(&(*k4));
-    v1.push_back(&(*k4));
-    // res1.push_back(10);
-    // res2.push_back(10);
-   try { vv.insert(vv.begin(), v1.begin(), v1.end()); }
-   catch (...) {
-       res1.push_back(vv.size());
-       res1.push_back(vv.capacity());
-   }
-   try { ss.insert(ss.begin(), v1.begin(), v1.end()); }
-   catch (...) {
-       res2.push_back(ss.size());
-       res2.push_back(ss.capacity());
-   }
-    print_vectors(res1, res2, false);
-
-}
-
-void test() {
-//  vector v;
-//  stdvector sv;
-//  v.push_back(137);
-//  sv.push_back(137);
-//  v.push_back(1337);
-//  sv.push_back(1337);
-//  v.push_back(1337);
-//  sv.push_back(1337);
-//  v.push_back(1337);
-//  sv.push_back(1337);
-//  v.insert(v.begin(), sv.begin(), sv.end());
-//
-//  print_vector(v, true);
- insert_test_4();
-//  std::vector<int> y = insert_test_4();
-//  print_vectors(y, x, true);
-//  print_vectors(sv, v, true);
-
-}
-
-void jouj()
-{
-  test();
+  avl.insert(std::make_pair("hello", "world"));
+  std::cout << "size: " << avl.size() << " key " << avl.getRoot()->getKey() << " Value " << avl.getRoot()->getValue() << std::endl;
 }
 
 int main() {
 
-  
-  jouj();
- system("leaks test");
+  // testMap();
+  std::vector<std::pair<int, int> > pr;
+    
+  for (int i = 0; i < 10; i++)
+    pr.push_back(std::make_pair(i, i * 10));
+  ft::map<int, int> mp(pr.begin(), pr.end());
+
+  // std::cout << mp[4]  << std::endl;
+
+  ft::map<int, int>::iterator it = mp.begin();
+
+  // std::cout << it->first << std::endl;
 }

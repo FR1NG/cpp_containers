@@ -5,12 +5,12 @@
 #include <stdexcept>
 #include <utility>
 
-template <class Key, class Value,
+template <class Key, class Value, class Type,
           class Compare = std::less<Key>,
           class Allocator = std::allocator<std::pair<const Key, Value> > >
 class Avl {
 public:
-  typedef std::pair<Key, Value> value_type;
+  typedef Type value_type;
   typedef value_type *pointer;
   typedef value_type &reference;
   typedef Allocator allocator_type;
@@ -19,26 +19,27 @@ public:
   class Node {
 
   private:
-    value_type *data_;
+    pointer data_;
     Node *left_;
     Node *right_;
     Node *parent_;
     Compare comparer_;
 
   public:
-    typedef std::pair<const Key, Value> value_type;
+    typedef Type value_type;
     typedef value_type *pinter;
     typedef value_type &reference;
 
-    Node()
+    Node(Compare &comp = Compare())
         : data_(NULL), left_(NULL), right_(NULL), parent_(NULL),
-          comparer_(Compare()) {}
+          comparer_(comp) {}
 
-    Node(const value_type &data)
+    Node(value_type data)
         : data_(new value_type(data)), left_(NULL), right_(NULL), parent_(NULL),
-          comparer_(Compare()) {}
+          comparer_(Compare()) {
+    }
 
-    pointer data() { return this->data_; }
+    value_type* data() { return this->data_; }
 
     Node *getLeft() const { return this->left_; }
 
@@ -104,6 +105,7 @@ private:
   }
 
 public:
+  typedef Node* node_pointer;
   Avl() : root_(NULL), size_(0) {}
   Avl(const value_type data) : root_(new Node(data)), size_(1) {}
   size_type size() const { return this->size_; }

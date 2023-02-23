@@ -9,10 +9,12 @@ $(NAME) : $(SRC)
 	@$(COMPILER) $(FLAGS) $^ -o $@
 
 
-t: re
+t: clear_propt re
 	@clear
 	@./${NAME}
 
+clear_propt:
+	@clear
 debug: fclean cdebug
 	@./debug
 
