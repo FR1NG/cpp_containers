@@ -5,7 +5,7 @@
 #include "vector.hpp"
 #include "vector/iterator.hpp"
 #include <cstddef>
-#include <cstdlib>
+// #include <cstdlib>
 #include <exception>
 #include <iostream>
 #include <stack>
@@ -65,6 +65,19 @@ int main() {
   // std::cout << mp[4]  << std::endl;
 
   ft::map<int, int>::iterator it = mp.begin();
+  // while(it != mp.end())
+  //   {
+  //     it++;
+  //   }
+  for(int i = 0; i < 10; i++, it++)
+    std::cout << "key : " << it->first << " value: " << it->second << std::endl;
 
-  // std::cout << it->first << std::endl;
+
+  // it.test();
+  // it++;
+  // it++;
+  // std::cout << it->second << std::endl;
+
+  // std::cout << mp.getTree()->getBiggest()->getKey() << std::endl;
+
 }

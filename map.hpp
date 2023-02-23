@@ -66,9 +66,17 @@ class map {
   * iteartors part
   */
   iterator begin() {
-    return iterator(this->tree_->getRoot());
+    return iterator(this->tree_->getSmallest());
   }
 
+  iterator end() {
+    return iterator(this->tree_->getBiggest());
+  }
+
+  tree* getTree() {
+
+    return this->tree_;
+  }
 };
 }; // end of namespace  ft
 

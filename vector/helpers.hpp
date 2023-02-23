@@ -40,11 +40,11 @@ namespace ft
     template<>
     struct is_integral<char> : public true_type{};
 
-    template<>
-    struct is_integral<char16_t> : public true_type{};
+    // template<>
+    // struct is_integral<char16_t> : public true_type{};
 
-    template<>
-    struct is_integral<char32_t> : public true_type{};
+    // template<>
+    // struct is_integral<char32_t> : public true_type{};
 
     template<>
     struct is_integral<wchar_t> : public true_type{};
@@ -107,8 +107,8 @@ namespace ft
 template<class Type>
 struct is_std : public true_type{};
 
-template<class Type>
-struct is_std<std::vector<Type> > : public false_type{};
+// template<class Type>
+// struct is_std<std::vector<Type> > : public false_type{};
 
 
 /*

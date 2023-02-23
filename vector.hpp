@@ -14,7 +14,6 @@
 #include <limits>
 #include <memory>
 #include <stdexcept>
-#include <type_traits>
 
 namespace ft {
 template <typename T, typename Allocator = std::allocator<T> > class vector {

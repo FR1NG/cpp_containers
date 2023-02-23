@@ -5,8 +5,7 @@
 #include <stdexcept>
 #include <utility>
 
-template <class Key, class Value, class Type,
-          class Compare = std::less<Key>,
+template <class Key, class Value, class Type, class Compare = std::less<Key>,
           class Allocator = std::allocator<std::pair<const Key, Value> > >
 class Avl {
 public:
@@ -15,9 +14,8 @@ public:
   typedef value_type &reference;
   typedef Allocator allocator_type;
   typedef size_t size_type;
-  // Node class [ begin ]
+  // Node class [ begin ] ==========================
   class Node {
-
   private:
     pointer data_;
     Node *left_;
@@ -27,7 +25,7 @@ public:
 
   public:
     typedef Type value_type;
-    typedef value_type *pinter;
+    typedef value_type *data_pointer;
     typedef value_type &reference;
 
     Node(Compare &comp = Compare())
@@ -36,16 +34,29 @@ public:
 
     Node(value_type data)
         : data_(new value_type(data)), left_(NULL), right_(NULL), parent_(NULL),
-          comparer_(Compare()) {
-    }
+          comparer_(Compare()) {}
 
-    value_type* data() { return this->data_; }
+    value_type *data() { return this->data_; }
 
     Node *getLeft() const { return this->left_; }
 
     Node *getRight() const { return this->right_; }
 
     Node *getParent() const { return this->parent_; }
+
+    bool hasRight() const { return this->right_; }
+
+    bool hasLeft() const { return this->left_; }
+
+    bool hasParent() const {return this->parent_; }
+
+    bool isLeft() const {
+      return (this->hasParent() && this == this->getParent()->getLeft());
+    }
+
+    bool isRight() const {
+      return (this->hasParent() && this == this->getParent()->getRight());
+    }
 
     void setLeft(Node *node) {
       this->left_ = node;
@@ -82,12 +93,18 @@ public:
     }
     ~Node() { delete data_; }
   };
-  // node class [ end ]
+  // node class [ end ] =================================
+
+public:
+  typedef Node *node_pointer;
 
 private:
   Node *root_;
   size_type size_;
   allocator_type allocator_;
+  node_pointer smallest_;
+  node_pointer biggest_;
+
   void recursive_insert_(Node *node, Node *parent) {
     if (*node == *parent) {
       throw std::runtime_error("duplicated key");
@@ -105,16 +122,25 @@ private:
   }
 
 public:
-  typedef Node* node_pointer;
-  Avl() : root_(NULL), size_(0) {}
-  Avl(const value_type data) : root_(new Node(data)), size_(1) {}
-  size_type size() const { return this->size_; }
-  Node *getRoot() const { return this->root_; }
 
-  Node *insert_node(Node* newNode) {
-    Node *root = this->root_;
+  Avl() : root_(NULL), size_(0), smallest_(NULL), biggest_(NULL) {}
+
+  Avl(const value_type data) : root_(new Node(data)), size_(1), smallest_(NULL), biggest_(NULL) {}
+
+  size_type size() const { return this->size_; }
+
+  node_pointer getRoot() const { return this->root_; }
+
+  node_pointer getSmallest() const { return this->smallest_; }
+
+  node_pointer getBiggest() const { return this->biggest_; }
+
+  node_pointer insert_node(Node *newNode) {
+    node_pointer root = this->root_;
     if (!root) {
       root_ = newNode;
+      this->smallest_ = newNode;
+      this->biggest_ = newNode;
       this->size_++;
       return newNode;
     }
@@ -126,17 +152,24 @@ public:
       else
         root->setRight(newNode);
       this->size_++;
-      return newNode;
+    } else {
+      this->recursive_insert_(newNode, root);
+      this->size_++;
     }
-    this->recursive_insert_(newNode, root);
-    this->size_++;
+    if(!this->smallest_)
+      this->smallest_ = newNode;
+    else if (newNode < this->smallest_)
+        this->smallest_ = newNode;
+    if(!this->biggest_)
+      this->biggest_ = newNode;
+    else if (this->biggest_ < newNode)
+        this->biggest_ = newNode;
     return newNode;
   }
 
-  Node* insert(const value_type data)
-{
+  Node *insert(const value_type data) {
     Node *newNode = new Node(data);
-    try{
+    try {
       newNode = insert_node(newNode);
       this->rebalence(newNode);
     } catch (...) {
@@ -146,7 +179,7 @@ public:
     return newNode;
   }
 
-  Node* insert(const Key& key, Value& value) {
+  Node *insert(const Key &key, Value &value) {
     value_type data = this->allocator_.allocate(1);
     this->allocator_.construct(data, std::make_pair(key, value));
     return this->insert(data);
@@ -165,8 +198,7 @@ public:
         } else {
           this->rotateRight(currentNode);
         }
-      }
-      else if (factor < -1) {
+      } else if (factor < -1) {
         if (childFactor > 0) {
           this->rotateRightLeft(currentNode->getRight());
         } else {
@@ -192,7 +224,7 @@ public:
 
   void setRoot(Node *node) { this->root_ = node; }
 
-  Node *rotateLeft(Node* node) {
+  Node *rotateLeft(Node *node) {
     // ! dont forget to handle if the parent is null;
     // getting the parent and the right child
     Node *child = node->getRight();
@@ -235,7 +267,7 @@ public:
     return node->getParent();
   }
 
-  Node* rotateLeftRight(Node* node) {
+  Node *rotateLeftRight(Node *node) {
     Node *tmp = this->rotateLeft(node);
     return this->rotateRight(tmp->getParent());
   }

@@ -21,7 +21,7 @@ public:
   typedef typename  ft::iterator_traits<Iterator>::reference reference;
 
   // memeber functions
-  iterator(): _it(nullptr){}
+  iterator(): _it(NULL){}
 
   explicit iterator(Iterator it):_it(it){}
 

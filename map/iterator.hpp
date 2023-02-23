@@ -15,14 +15,12 @@ public:
   typedef typename  ft::iterator_traits<NodeType>::difference_type difference_type;
   typedef typename  ft::iterator_traits<NodeType>::pointer pointer;
   typedef typename  ft::iterator_traits<NodeType>::reference reference;
+  typedef typename value_type::data_pointer data_pointer;
 
   // memeber functions
-  map_iterator(): _it(nullptr){}
+  map_iterator(): _it(NULL){}
 
-  explicit map_iterator(iterator_type it):_it(it){
-    this->_it = new Avl<int, int, std::pair<int, int>, std::less<int> >::Node();
-    // std::cout << this->_it->getRoot()->getKey() << std::endl;
-  }
+  explicit map_iterator(iterator_type it):_it(it){}
 
   template <class Iter>  map_iterator(const map_iterator<Iter>& it): _it(it.base()){ 
 
@@ -48,7 +46,7 @@ public:
   // }
 
   // const reference operator*() const { 
-  //   return (_it->data());
+  //   return (_it->data()->first);
   // }
 
   //  iterator operator+(difference_type n) const {
@@ -58,11 +56,33 @@ public:
   //  map_iterator operator++() {
   // }
 
-  //  iterator operator++(int) {
-  //    iterator tmp  = *this;
-  //   ++(*this);
-  //   return tmp;
-  // }
+  map_iterator operator++(int) {
+    map_iterator tmp = *this;
+
+    if (this->_it->isLeft()) {
+      if (this->_it->hasRight()) {
+        this->_it = this->_it->getRight();
+        while (this->_it->hasLeft())
+          this->_it = this->_it->getLeft();
+      } else {
+        this->_it = this->_it->getParent();
+      }
+    }
+    if (this->_it->isRight()) {
+      if (this->_it->hasRight())
+        this->_it = this->_it->getRight();
+      else {
+        for (int i = 0; i < 2; i++) {
+
+          if (this->_it->hasParent())
+            this->_it = this->_it->getParent();
+        }
+      }
+    }
+    if(!this->_it->hasParent() && this->_it->hasRight())
+      this->_it = this->_it->getRight();
+    return tmp;
+  }
 
   //  iterator operator+=(difference_type n)
   // {
@@ -90,11 +110,18 @@ public:
   //   return (*this);
   // }
 
-  // pointer operator->() { return &(operator*()->data()); }
+  data_pointer operator->() { return (this->_it->data()); }
 
-  // const pointer operator->() const { return &(operator*()); }
+  // const pointer operator->() const { return &(operator*()->data()); }
 
   // reference operator[](difference_type n) const { return this->_it[n]; }
+
+  // void test()
+  // {
+  //   typedef typename value_type::value_type* ptr;
+  //   ptr p = this->_it->data() ;
+  //   std::cout << p->first << std::endl;
+  // }
 
 private:
   // data members
@@ -109,11 +136,11 @@ private:
 //   return lhs.base() == rhs.base();
 // }
 
-// template<class Iterator1, class Iterator2>
-// friend bool operator!=(const  iterator<Iterator1> &lhs,
-//                 const  iterator<Iterator2> &rhs) {
-//   return lhs.base() != rhs.base();
-// }
+template<class Iterator1, class Iterator2>
+friend bool operator!=(const  map_iterator<Iterator1> &lhs,
+                const  map_iterator<Iterator2> &rhs) {
+  return lhs.base() != rhs.base();
+}
 
 // template<class Iterator1, class Iterator2>
 // friend bool operator<(const  iterator<Iterator1> &lhs,
