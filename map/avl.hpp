@@ -27,6 +27,8 @@ public:
     typedef Type value_type;
     typedef value_type *data_pointer;
     typedef value_type &reference;
+    typedef Key first_type;
+    typedef Value second_type;
 
     Node(Compare &comp = Compare())
         : data_(NULL), left_(NULL), right_(NULL), parent_(NULL),
@@ -48,7 +50,7 @@ public:
 
     bool hasLeft() const { return this->left_; }
 
-    bool hasParent() const {return this->parent_; }
+    bool hasParent() const { return this->parent_; }
 
     bool isLeft() const {
       return (this->hasParent() && this == this->getParent()->getLeft());
@@ -56,6 +58,10 @@ public:
 
     bool isRight() const {
       return (this->hasParent() && this == this->getParent()->getRight());
+    }
+
+    bool isRoot() const {
+      return (!this->hasParent());
     }
 
     void setLeft(Node *node) {
@@ -125,7 +131,7 @@ public:
 
   Avl() : root_(NULL), size_(0), smallest_(NULL), biggest_(NULL) {}
 
-  Avl(const value_type data) : root_(new Node(data)), size_(1), smallest_(NULL), biggest_(NULL) {}
+  Avl(const value_type data) : root_(new Node(data)), size_(1), smallest_(NULL), biggest_(NULL) {} 
 
   size_type size() const { return this->size_; }
 
@@ -222,7 +228,10 @@ public:
     return (height(node->getLeft()) - height(node->getRight()));
   }
 
-  void setRoot(Node *node) { this->root_ = node; }
+  void setRoot(Node *node) { 
+    this->root_ = node;
+    node->setParent(NULL);
+  }
 
   Node *rotateLeft(Node *node) {
     // ! dont forget to handle if the parent is null;

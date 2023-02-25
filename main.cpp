@@ -62,22 +62,25 @@ int main() {
     pr.push_back(std::make_pair(i, i * 10));
   ft::map<int, int> mp(pr.begin(), pr.end());
 
-  // std::cout << mp[4]  << std::endl;
+  // ft::Avl<int, int, std::pair<const int, int> > avl(mp.getTree());
+  // ft::map<int, int>::tree* tree = mp.getTree();
 
-  ft::map<int, int>::iterator it = mp.begin();
-  // while(it != mp.end())
-  //   {
-  //     it++;
-  //   }
-  for(int i = 0; i < 10; i++, it++)
-    std::cout << "key : " << it->first << " value: " << it->second << std::endl;
-
-
-  // it.test();
-  // it++;
-  // it++;
-  // std::cout << it->second << std::endl;
-
-  // std::cout << mp.getTree()->getBiggest()->getKey() << std::endl;
-
+  // ft::map<int, int>::iterator it = mp.begin();
+  // std::cout << "post: " << (it++)->second << std::endl;
+  // std::cout << "pre: " << (++it )->second << std::endl;
+  // std::cout << *it << std::endl;
+  // while (it != mp.end()) {
+  //   std::cout << it->first << std::endl;
+  //   it++;
+  // }
+  // ft::map<int, int>::iterator xi = mp.end();
+  // std::cout << xi->first <<  std::endl;
+  // for (int i = 0; i < 10; i++, it++)
+  //   std::cout << it->first << std::endl;
+  //   testing --
+  ft::map<int, int>::iterator it = mp.end();
+  while (it != mp.begin()) {
+    std::cout << *it << std::endl;
+    it--;
+  }
 }

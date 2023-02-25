@@ -77,6 +77,12 @@ class map {
 
     return this->tree_;
   }
+
+
+  //  all test goes here 
+  bool rootIsRoot() {
+    return this->tree_->getRoot()->isRoot();
+  }
 };
 }; // end of namespace  ft
 
