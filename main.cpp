@@ -52,6 +52,17 @@ void testAvl() {
   avl.insert(std::make_pair("hello", "world"));
   std::cout << "size: " << avl.size() << " key " << avl.getRoot()->getKey() << " Value " << avl.getRoot()->getValue() << std::endl;
 }
+typedef ft::map<int, int>::tree::node_pointer node_pointer;
+typedef ft::map<int, int>::tree::Node node_type;
+typedef ft::map<int, int>::tree tree_type;
+bool isBalenced(node_pointer node) {
+  int bf = tree_type::getBalenceFactor(node);
+  if(bf < -1 || bf > 1)
+    return false;
+  if ((node->getRight() && !isBalenced(node->getRight())) || (node->getLeft() && !isBalenced(node->getLeft())))
+    return false;
+  return true;
+}
 
 int main() {
 
@@ -61,26 +72,19 @@ int main() {
   for (int i = 0; i < 10; i++)
     pr.push_back(std::make_pair(i, i * 10));
   ft::map<int, int> mp(pr.begin(), pr.end());
+  mp.erase(0);
+  mp.erase(2);
 
-  // ft::Avl<int, int, std::pair<const int, int> > avl(mp.getTree());
-  // ft::map<int, int>::tree* tree = mp.getTree();
+  ft::map<int,int>::tree* tr = mp.getTree();
 
-  // ft::map<int, int>::iterator it = mp.begin();
-  // std::cout << "post: " << (it++)->second << std::endl;
-  // std::cout << "pre: " << (++it )->second << std::endl;
-  // std::cout << *it << std::endl;
-  // while (it != mp.end()) {
-  //   std::cout << it->first << std::endl;
-  //   it++;
-  // }
-  // ft::map<int, int>::iterator xi = mp.end();
-  // std::cout << xi->first <<  std::endl;
-  // for (int i = 0; i < 10; i++, it++)
-  //   std::cout << it->first << std::endl;
-  //   testing --
-  ft::map<int, int>::iterator it = mp.end();
-  while (it != mp.begin()) {
-    std::cout << *it << std::endl;
-    it--;
-  }
+  cout << "=========[ delete test ]==========" << endl;
+  cout << (isBalenced(tr->getRoot()) ? "balenced" : "not balenced") << endl;
+  // tr->deleteNode(2);
+
+  // ft::map<int,int>::tree::node_pointer node = tr->getSmallest();
+  for(ft::map<int, int>::iterator it = mp.begin(); it != mp.end(); it++)
+    std::cout << it->first << std::endl;
+cout << mp.end()->first << endl;
+
+// cout << tr->getRoot()->getLeft()->getRight()->getKey() << endl;
 }

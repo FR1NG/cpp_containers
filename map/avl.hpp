@@ -14,6 +14,7 @@ public:
   typedef value_type &reference;
   typedef Allocator allocator_type;
   typedef size_t size_type;
+  Compare comparer_;
   // Node class [ begin ] ==========================
   class Node {
   private:
@@ -64,6 +65,16 @@ public:
       return (!this->hasParent());
     }
 
+    bool isLeaf() const { return (!this->hasRight() && !this->hasLeft()); }
+
+    bool hasOneChild() const {
+      return ((this->hasRight() && !this->hasLeft()) ||  (!this->hasRight() && this->hasLeft()));
+    }
+
+    bool hasTwoChildren() const {
+      return (this->hasLeft() && this->hasRight());
+    }
+
     void setLeft(Node *node) {
       this->left_ = node;
       if (node)
@@ -77,6 +88,30 @@ public:
     }
 
     void setParent(Node *node) { this->parent_ = node; }
+
+    void detach() {
+      Node* elpadre;
+      if(!this->isRoot()) {
+        elpadre = this->getParent();
+        if (this->isRight())
+          elpadre->setRight(NULL);
+        else
+         elpadre->setLeft(NULL);
+      }
+    }
+
+    void replace(Node* node) {
+      Node* elpadre;
+      if(!this->isRoot()) {
+        elpadre = this->getParent();
+        if(isLeft())
+          elpadre->setLeft(node);
+        else
+         elpadre->setRight(node);
+      }
+      node->setRight(this->getRight());
+      node->setLeft(this->getLeft());
+    }
 
     Key getKey() const {
       if (!data_)
@@ -191,6 +226,73 @@ public:
     return this->insert(data);
   }
 
+  node_pointer getSmallest(node_pointer node) {
+    node_pointer small = node;
+    while(small->hasLeft())
+      small = small->getLeft();
+    return small;
+  }
+
+  node_pointer getBiggest(node_pointer node) {
+    node_pointer small = node;
+    while(small->hasRight())
+      small = small->getRight();
+    return small;
+  }
+
+  Node* findNode(const Key key) {
+    node_pointer node = this->getRoot();
+    while (comparer_(key, node->getKey()) || comparer_(node->getKey(), key)) {
+      if (comparer_(key, node->getKey()))
+        node = node->getLeft();
+      else if (comparer_(node->getKey(), key))
+        node = node->getRight();
+    }
+    return node;
+  }
+
+  void deleteNode(const Key key) {
+    node_pointer node = this->findNode(key);
+    node_pointer elpadre;
+
+    // is leaf case
+    if(node->isLeaf()) {
+      if (node->isRoot()) {
+        this->root_ = NULL;
+      } else {
+        elpadre = node->getParent();
+        node->detach();
+        rebalence(elpadre);
+      }
+    }
+
+    // had one child
+    else if (node->hasOneChild()) {
+      node_pointer onlyChild = node->hasLeft() ? node->getLeft() : node->getRight();
+      if(node->isRoot()) {
+        this->root_ = onlyChild;
+      } else {
+        elpadre = node->getParent();
+        node->isRight() ? elpadre->setRight(onlyChild) : elpadre->setLeft(onlyChild);
+        rebalence(onlyChild);
+      }
+    }
+
+    // had two children
+    else if (node->hasTwoChildren()) {
+      node_pointer replacement = this->getBiggest(node->getLeft());
+      // if(comparer_(replacement->getKey(), smallest_->getKey()))
+      //   this->smallest_ = replacement;
+      replacement->detach();
+      node->replace(replacement);
+      rebalence(replacement);
+    }
+
+    this->smallest_ = this->getSmallest(this->root_);
+    delete node;
+    this->size_--;
+  }
+
   void rebalence(Node *node) {
     Node *currentNode = node;
     int factor = 0;
@@ -224,6 +326,7 @@ public:
       return leftheight + 1;
     return rightheight + 1;
   }
+
   static int getBalenceFactor(Node *node) {
     return (height(node->getLeft()) - height(node->getRight()));
   }
@@ -234,12 +337,9 @@ public:
   }
 
   Node *rotateLeft(Node *node) {
-    // ! dont forget to handle if the parent is null;
-    // getting the parent and the right child
     Node *child = node->getRight();
     Node *parent = node->getParent();
 
-    // assinging the child to his el grande padre to become his padre
     if (parent) {
       node == parent->getRight() ? parent->setRight(child)
                                  : parent->setLeft(child);

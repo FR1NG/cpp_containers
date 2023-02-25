@@ -1,5 +1,6 @@
 #ifndef MAP_HPP
 #define MAP_HPP
+#include <cstddef>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -14,6 +15,7 @@ class map {
   public:
     typedef Key key_type;
     typedef T mapped_type;
+    typedef std::size_t size_type;
     typedef std::pair<const key_type, mapped_type> value_type;
     typedef Compare key_compare;
     // typedef look for it value_compare;
@@ -61,6 +63,13 @@ class map {
     return node->getValue();
   }
 
+  /*
+   * modifiers
+   */
+  size_type erase( const Key& key ) {
+    this->tree_->deleteNode(key);
+    return 0;
+  }
 
   /*
   * iteartors part
