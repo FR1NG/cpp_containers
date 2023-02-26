@@ -31,9 +31,9 @@ public:
     typedef Key first_type;
     typedef Value second_type;
 
-    Node(Compare &comp = Compare())
+    Node()
         : data_(NULL), left_(NULL), right_(NULL), parent_(NULL),
-          comparer_(comp) {}
+          comparer_(Compare()) {}
 
     Node(value_type data)
         : data_(new value_type(data)), left_(NULL), right_(NULL), parent_(NULL),
@@ -145,6 +145,7 @@ private:
   allocator_type allocator_;
   node_pointer smallest_;
   node_pointer biggest_;
+  node_pointer end_;
 
   void recursive_insert_(Node *node, Node *parent) {
     if (*node == *parent) {
@@ -162,11 +163,32 @@ private:
     }
   }
 
+  void detachEnd() {
+    node_pointer end = this->getRoot();
+    
+    while(end->getRight()->hasRight())
+      end = end->getRight();
+    end->getRight()->detach();
+    this->end_->setParent(NULL);
+  }
+
+  void attachEnd() {
+    node_pointer end = this->getRoot();
+    
+    while(end->hasRight())
+      end = end->getRight();
+    end->setRight(this->end_);
+    this->end_->setParent(end);
+    
+  }
+
 public:
 
-  Avl() : root_(NULL), size_(0), smallest_(NULL), biggest_(NULL) {}
+  Avl() : root_(NULL), size_(0), smallest_(NULL), biggest_(NULL), end_(new Node()) {}
 
-  Avl(const value_type data) : root_(new Node(data)), size_(1), smallest_(NULL), biggest_(NULL) {} 
+  Avl(const value_type data) : root_(new Node(data)), size_(1), smallest_(NULL), biggest_(NULL), end_(new Node()) {
+    this->attachEnd();
+  } 
 
   size_type size() const { return this->size_; }
 
@@ -175,6 +197,8 @@ public:
   node_pointer getSmallest() const { return this->smallest_; }
 
   node_pointer getBiggest() const { return this->biggest_; }
+
+  node_pointer getEnd() const { return this->end_; }
 
   node_pointer insert_node(Node *newNode) {
     node_pointer root = this->root_;
@@ -210,13 +234,17 @@ public:
 
   Node *insert(const value_type data) {
     Node *newNode = new Node(data);
+    if(this->size() > 0)
+      this->detachEnd();
     try {
       newNode = insert_node(newNode);
       this->rebalence(newNode);
     } catch (...) {
       delete newNode;
+      this->attachEnd();
       return NULL;
     }
+    this->attachEnd();
     return newNode;
   }
 

@@ -79,7 +79,7 @@ class map {
   }
 
   iterator end() {
-    return iterator(this->tree_->getBiggest());
+    return iterator(this->tree_->getEnd());
   }
 
   tree* getTree() {

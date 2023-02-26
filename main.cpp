@@ -69,22 +69,15 @@ int main() {
   // testMap();
   std::vector<std::pair<int, int> > pr;
     
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 14; i++)
     pr.push_back(std::make_pair(i, i * 10));
   ft::map<int, int> mp(pr.begin(), pr.end());
-  mp.erase(0);
-  mp.erase(2);
+  // mp.erase(0);
+  // mp.erase(2);
 
-  ft::map<int,int>::tree* tr = mp.getTree();
+  // ft::map<int,int>::tree* tr = mp.getTree();
 
   cout << "=========[ delete test ]==========" << endl;
-  cout << (isBalenced(tr->getRoot()) ? "balenced" : "not balenced") << endl;
-  // tr->deleteNode(2);
-
-  // ft::map<int,int>::tree::node_pointer node = tr->getSmallest();
   for(ft::map<int, int>::iterator it = mp.begin(); it != mp.end(); it++)
-    std::cout << it->first << std::endl;
-cout << mp.end()->first << endl;
-
-// cout << tr->getRoot()->getLeft()->getRight()->getKey() << endl;
+    cout << *it << endl; 
 }

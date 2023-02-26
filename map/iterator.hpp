@@ -152,7 +152,7 @@ friend bool operator==(const  map_iterator<Iterator1> &lhs,
 template<class Iterator1, class Iterator2>
 friend bool operator!=(const  map_iterator<Iterator1> &lhs,
                 const  map_iterator<Iterator2> &rhs) {
-  return (lhs.base()->getKey() != rhs.base()->getKey());
+  return (lhs.base() != rhs.base());
 }
 
 // template<class Iterator1, class Iterator2>
