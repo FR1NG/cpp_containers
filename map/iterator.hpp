@@ -33,12 +33,12 @@ public:
   }
 
   // overloading operators
-  // template< class Iter >
-  // iterator& operator=( const  iterator<Iter>& it )
-  // {
-  //   this->_it = it.base();
-  //   return *this;
-  // }
+  template< class Iter >
+  map_iterator& operator=( const  map_iterator<Iter>& it )
+  {
+    this->_it = it.base();
+    return *this;
+  }
 
   second_type operator*() { 
     return (_it->data()->second);
@@ -47,10 +47,6 @@ public:
   const second_type operator*() const { 
     return (_it->data()->second);
   }
-
-  //  iterator operator+(difference_type n) const {
-  //   return iterator(this->_it + n);
-  // }
 
    map_iterator operator++() {
     if (this->_it->isRoot() && this->_it->hasRight()) {
@@ -127,11 +123,6 @@ public:
     return tmp;
   }
 
-  //  iterator &operator-=(difference_type n) {
-  //   this->_it = this->_it - n;
-  //   return (*this);
-  // }
-
   data_pointer operator->() { return (this->_it->data()); }
 
   const data_pointer operator->() const { return (this->_it->data()); }
@@ -142,55 +133,19 @@ private:
 
 
 
+}; // class iterator
+
 // // relational operators
 template<class Iterator1, class Iterator2>
-friend bool operator==(const  map_iterator<Iterator1> &lhs,
+bool operator==(const  map_iterator<Iterator1> &lhs,
                 const  map_iterator<Iterator2> &rhs) {
   return lhs.base() == rhs.base();
 }
 
 template<class Iterator1, class Iterator2>
-friend bool operator!=(const  map_iterator<Iterator1> &lhs,
+bool operator!=(const  map_iterator<Iterator1> &lhs,
                 const  map_iterator<Iterator2> &rhs) {
   return (lhs.base() != rhs.base());
 }
-
-// template<class Iterator1, class Iterator2>
-// friend bool operator<(const  iterator<Iterator1> &lhs,
-//                const  iterator<Iterator2> &rhs) {
-//   return lhs.base() < rhs.base();
-// }
-
-// template<class Iterator1, class Iterator2>
-// friend bool operator<=(const  iterator<Iterator1> &lhs,
-//                 const  iterator<Iterator2> &rhs) {
-//   return lhs.base() <= rhs.base();
-// }
-
-// template<class Iterator1, class Iterator2>
-// friend bool operator>(const  iterator<Iterator1> &lhs,
-//                const  iterator<Iterator2> &rhs) {
-//   return lhs.base() > rhs.base();
-// }
-
-// template<class Iterator1, class Iterator2>
-// friend bool operator>=(const  iterator<Iterator1> &lhs,
-//                 const  iterator<Iterator2> &rhs) {
-//   return lhs.base() >= rhs.base();
-// }
-
-// template<class Iterator1>
-// friend iterator<Iterator1> operator+(typename  iterator<Iterator1>::difference_type n,
-//           const  iterator<Iterator1> &it) {
-//   return iterator<Iterator1>(it + n);
-// }
-
-// template <class It>
-//  friend typename iterator<It>::difference_type operator-(    const iterator<It>& lhs,    const iterator<It>& rhs)
-// {
-//     return  lhs.base() - rhs.base();
-// }
-
-}; // class iterator
 
 } // namespace ft
